@@ -35,7 +35,7 @@ label{font-size:13px;font-weight:600;color:var(--muted);display:block;margin:12p
 .row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrapf{flex-wrap:wrap}
 .g2,.g3,.g4{display:grid;gap:16px}
 .g2>*,.g3>*,.g4>*{min-width:0}
-.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}.g2w{grid-template-columns:1.4fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
 .mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
 .tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--pri)}
 .tag.ok{background:#d1fae5;color:#047857}.tag.warn{background:#fef3c7;color:#92400e}.tag.bad{background:#fee2e2;color:#b91c1c}.tag.gray{background:#eef0f4;color:#5b6178}
@@ -192,8 +192,8 @@ body.fbm #app *{cursor:crosshair!important}
 .fb-panel{position:fixed;right:22px;bottom:86px;width:380px;max-height:72vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 60px -20px rgba(15,18,48,.45);z-index:95;padding:18px}
 .fb-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
 .fb-pin{position:absolute;z-index:80;width:24px;height:24px;border-radius:50%;background:#f59e0b;color:#2a1a00;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.25);cursor:pointer}
-@media(min-width:861px) and (pointer:fine){.fb-btn{display:inline-flex}}
-@media(max-width:860px){.fb-pin,.fb-panel{display:none}}
+.fb-btn{display:inline-flex}
+@media(max-width:860px){.fb-btn{right:12px;bottom:84px;padding:11px 15px;font-size:14px}.fb-panel{left:8px;right:8px;width:auto;bottom:140px;max-height:58vh}#fbbar{font-size:12px;padding:7px 10px}}
 #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:calc(100% - 32px)}
 #toast.show{opacity:1;transform:translateX(-50%)}
 @media(max-width:980px){.split.wide{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}.hero-in{grid-template-columns:1fr}.atom{max-width:300px}.split{grid-template-columns:1fr}.sticky{position:static}}
@@ -207,7 +207,7 @@ body.fbm #app *{cursor:crosshair!important}
  .links{display:none}
 }
 @media(max-width:620px){
- .g2,.g3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}
+ .g2,.g2w,.g3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}
  .nav-r .lang,.nav-r .btn-g{display:none}
  section.blk{padding:60px 0}.cta,.parentband{padding:28px}
  .podium{gap:8px}.price.hot{transform:none}
@@ -219,7 +219,7 @@ body.fbm #app *{cursor:crosshair!important}
 <div id="app"></div>
 <div id="modal"></div>
 <div id="toast"></div>
-<div id="fbbar" class="fb-ui">Пікір режимі: өзгерткіңіз келетін блокты басыңыз · шығу — Esc немесе төмендегі батырма</div>
+<div id="fbbar" class="fb-ui">Пікір режимі: өзгерткіңіз келетін блокты басыңыз · шығу — төмендегі батырма</div>
 <div id="fbpins" class="fb-ui" style="position:absolute;left:0;top:0"></div>
 <div id="fbpanel" class="fb-ui"></div>
 <button id="fbbtn" class="fb-btn fb-ui" onclick="fbToggle()"></button>
@@ -473,7 +473,7 @@ function sHome(){
  const newHw=S.hw.filter(w=>w.st==='new');
  const wk=ranked('all','week'),wr=wk.findIndex(s=>s.me)+1;
  return head('Сәлем, Айдана! 👋','Бүгін — 10 қазан, сенбі. Бүгінгі мақсат: 1 үй жұмысы + 1 тест',xpPills())+`
- <div class="g2" style="grid-template-columns:1.4fr 1fr">
+ <div class="g2 g2w">
   <div class="card hello"><div class="row between"><div><div class="small" style="opacity:.75">Сенің деңгейің</div><h2 style="font-size:28px;margin-top:4px">${L.name}</h2></div><div style="font-size:46px">${['🌱','🔭','🧪','🍎','🌌'][L.i]}</div></div>
    <div class="row between small mt16"><span>${x.toLocaleString('ru')} XP</span><span style="opacity:.75">${L.next?`«${L.nextName}» деңгейіне дейін ${(L.next-x).toLocaleString('ru')} XP`:'Ең жоғары деңгей!'}</span></div><div class="bar mt8"><i style="width:${pr}%"></i></div>
    <div class="row wrapf mt16"><button class="btn btn-a btn-s" onclick="tab('test')">${ic('bolt')} Тест тапсыру +40 XP</button><button class="btn btn-w btn-s" onclick="tab('badges')">Жетістіктер</button></div></div>
@@ -691,14 +691,14 @@ function idxPath(el){const p=[];while(el&&el.id!=='app'&&el.parentElement){p.uns
 function byPath(p){let el=$('#app');for(const i of p){el=el&&el.children[i]}return el}
 function fbSave(){store('fb',FB);fbBtn();drawPins();if(fbOpen)fbPanel()}
 function fbBtn(){$('#fbbtn').className='fb-btn fb-ui'+(fbOn?' on':'');$('#fbbtn').innerHTML=fbOn?`${ic('check')} Пікір режимінен шығу`:`💬 Пікір қалдыру${FB.length?` <span class="n">${FB.length}</span>`:''}`}
-function fbToggle(){fbOn=!fbOn;document.body.classList.toggle('fbm',fbOn);$('#fbbar').style.display=fbOn?'block':'none';document.querySelectorAll('.fb-hl').forEach(x=>x.classList.remove('fb-hl'));if(fbOn){fbOpen=true;fbPanel()}fbBtn()}
+function fbToggle(){fbOn=!fbOn;document.body.classList.toggle('fbm',fbOn);$('#fbbar').style.display=fbOn?'block':'none';document.querySelectorAll('.fb-hl').forEach(x=>x.classList.remove('fb-hl'));if(fbOn){fbOpen=IS_DESK}else if(FB.length){fbOpen=true}fbPanel();fbBtn()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fbOn)fbToggle()});
 document.addEventListener('mouseover',e=>{if(!fbOn)return;document.querySelectorAll('.fb-hl').forEach(x=>x.classList.remove('fb-hl'));const el=e.target.closest(PICK);if(el&&el.closest('#app'))el.classList.add('fb-hl')},true);
 document.addEventListener('click',e=>{if(!fbOn||e.target.closest('.fb-ui')||e.target.closest('#modal'))return;const el=e.target.closest(PICK);if(!el||!el.closest('#app'))return;e.preventDefault();e.stopPropagation();fbNew(el)},true);
 function fbNew(el){const label=el.innerText.replace(/\s+/g,' ').trim().slice(0,80)||el.className;
  window._fbEl=el;openModal(`<h3>Пікір</h3><p class="muted small">${esc(scrName())}</p><div class="msg ai mt12" style="max-width:100%;font-size:13px">«${esc(label)}»</div>
  <label>Не өзгерту керек?</label><textarea id="fb_t" rows="4" placeholder="Мысалы: бұл жерде менің фотом болсын / бағасы басқа / бұл батырма керек емес"></textarea>
- <button class="btn btn-a mt16" style="width:100%" onclick="fbAdd()">Сақтау</button>`);setTimeout(()=>$('#fb_t').focus(),50)}
+ <button class="btn btn-a mt16" style="width:100%" onclick="fbAdd()">Сақтау</button>`);setTimeout(()=>{const t=$('#fb_t');if(t)t.focus()},50)}
 function fbAdd(){const t=$('#fb_t').value.trim();if(!t){toast('Пікір мәтінін жазыңыз');return}const el=window._fbEl;
  FB.push({id:Date.now(),scr:scrName(),view:S.view,tab:S.tab,path:el?idxPath(el):null,label:el?el.innerText.replace(/\s+/g,' ').trim().slice(0,80):'Жалпы пікір',text:t});closeModal();fbSave();toast('Пікір сақталды · барлығы '+FB.length)}
 function fbGeneral(){const t=$('#fb_g').value.trim();if(!t)return;FB.push({id:Date.now(),scr:'Жалпы',view:null,tab:null,path:null,label:'Жалпы пікір',text:t});fbSave()}
@@ -706,7 +706,7 @@ function fbDel(id){FB=FB.filter(c=>c.id!==id);fbSave()}
 function fbGo(id){const c=FB.find(x=>x.id===id);if(c&&c.view){S.view=c.view;S.tab=c.tab;render();const el=c.path&&byPath(c.path);if(el)el.scrollIntoView({block:'center',behavior:'smooth'})}}
 function fbPanel(){const p=$('#fbpanel');if(!fbOpen){p.innerHTML='';return}
  p.innerHTML=`<div class="fb-panel"><div class="row between"><b>Пікірлер · ${FB.length}</b><button class="btn-i" onclick="fbOpen=false;fbPanel()">${ic('x')}</button></div>
- <p class="tiny muted mt8">Пікір режимін қосып, кез келген блокты басыңыз. Телефон мен компьютерде қарап шығыңыз, пікірді осы жерден жібересіз.</p>
+ <p class="tiny muted mt8">Пікір режимін қосып, кез келген блокты басыңыз. Соңында «Поштамен жіберу» басыңыз.</p>
  <div class="mt8">${FB.map((c,i)=>`<div class="fb-item"><div class="row between"><b>${i+1}. ${esc(c.scr)}</b><span class="row" style="gap:2px">${c.view?`<button class="btn-i" title="Көрсету" onclick="fbGo(${c.id})">${ic('eye','width:15px;height:15px')}</button>`:''}<button class="btn-i" title="Жою" onclick="fbDel(${c.id})">${ic('trash','width:15px;height:15px')}</button></span></div><div class="tiny muted">«${esc(c.label)}»</div><div class="mt8" style="margin-top:4px">${esc(c.text)}</div></div>`).join('')||'<p class="small muted" style="padding:10px 0">Әзірге пікір жоқ</p>'}</div>
  <label>Жалпы пікір (бүкіл сайт туралы)</label><div class="row"><input id="fb_g" placeholder="Түсі, стилі, атауы…" onkeydown="if(event.key==='Enter')fbGeneral()"><button class="btn btn-g" onclick="fbGeneral()">${ic('plus')}</button></div>
  <div style="display:grid;gap:8px;margin-top:14px"><button class="btn btn-a" onclick="fbSend()">${ic('send')} Поштамен жіберу</button><div class="g2" style="gap:8px"><button class="btn btn-g btn-s" onclick="fbCopy()">Көшіру</button><button class="btn btn-g btn-s" onclick="fbFile()">Файлға сақтау</button></div></div></div>`}
@@ -714,13 +714,13 @@ function fbText(){return 'Alpa Physics — макет бойынша пікір�
 function fbCopy(silent){const t=fbText();try{navigator.clipboard.writeText(t);if(!silent)toast('Мәтін көшірілді — хатқа немесе WhatsApp-қа қойыңыз')}catch(e){if(!silent)fbFile()}}
 function fbFile(){const b=new Blob([fbText()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='alpa_pikirler.txt';a.click();toast('Файл сақталды — оны хатқа тіркеңіз')}
 function fbSend(){if(!FB.length){toast('Әзірге пікір жоқ');return}fbCopy(true);location.href=`mailto:${FB_EMAIL}?subject=${encodeURIComponent('Alpa Physics — макет бойынша пікірлер')}&body=${encodeURIComponent(fbText())}`;toast('Пошта ашылды. Хат бос болса — Ctrl+V басыңыз (мәтін көшірілді)')}
-function drawPins(){const L=$('#fbpins');if(!L)return;if(!IS_DESK){L.innerHTML='';return}let out='';FB.forEach((c,i)=>{if(!c.path||c.view!==S.view||c.tab!==S.tab)return;const el=byPath(c.path);if(!el)return;const r=el.getBoundingClientRect();if(!r.width)return;out+=`<div class="fb-pin" title="${esc(c.text)}" style="left:${r.right+scrollX-14}px;top:${r.top+scrollY-10}px" onclick="fbOpen=true;fbPanel()">${i+1}</div>`});L.innerHTML=out}
+function drawPins(){const L=$('#fbpins');if(!L)return;let out='';FB.forEach((c,i)=>{if(!c.path||c.view!==S.view||c.tab!==S.tab)return;const el=byPath(c.path);if(!el)return;const r=el.getBoundingClientRect();if(!r.width)return;out+=`<div class="fb-pin" title="${esc(c.text)}" style="left:${Math.min(r.right,innerWidth-30)+scrollX-14}px;top:${r.top+scrollY-10}px" onclick="fbOpen=true;fbPanel()">${i+1}</div>`});L.innerHTML=out}
 let _pinRaf;addEventListener('scroll',()=>{cancelAnimationFrame(_pinRaf);_pinRaf=requestAnimationFrame(drawPins)},{passive:true});addEventListener('resize',drawPins);
 const _render=render;render=function(){_render();drawPins()};
 function intro(){if(store('intro'))return;store('intro',1);openModal(`<div style="font-size:40px">👋</div><h3 class="mt8">Сәлем, Алпа!</h3>
  <p class="mt12">Бұл — сіздің болашақ сайтыңыздың <b>алғашқы макеті</b>. Барлық батырма басылады: басты бет, оқушы, ата-ана және <b>сіздің мұғалім кабинетіңіз</b> («Рөлді ауыстыру» арқылы).</p>
  <p class="mt12">Цифрлар, бағалар, пікірлер мен оқушылар — уақытша мысал, оларды сізбен бірге ауыстырамыз.</p>
- ${IS_DESK?`<p class="mt12"><b>Пікір қалдыру:</b> оң жақ төмендегі сары <b>«💬 Пікір қалдыру»</b> батырмасын басып, өзгерткіңіз келетін кез келген блокты басыңыз. Соңында <b>«Поштамен жіберу»</b>.</p>`:`<p class="mt12">Телефоннан көрінісін қарап шығыңыз. <b>Пікірлерді компьютерден</b> қалдырасыз — онда арнайы батырма бар.</p>`}
+ <p class="mt12"><b>Пікір қалдыру:</b> сары <b>«💬 Пікір қалдыру»</b> батырмасын басып, өзгерткіңіз келетін блокты басыңыз да, жазыңыз. Соңында <b>«Поштамен жіберу»</b>.</p>
  <button class="btn btn-p mt16" style="width:100%" onclick="closeModal()">Түсінікті, қарайын</button>`)}
 render();fbBtn();intro();
 </script>

@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alpa Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap&subset=cyrillic-ext" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#141a33;--muted:#6b7190;--line:#e6e8f0;--pri:#4f46e5;--pri2:#7c3aed;--acc:#f59e0b;--ok:#10b981;--warn:#f59e0b;--bad:#ef4444;--soft:#eef0ff;--r:18px;--side:#0f1230}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.brand,.num{font-family:Montserrat,Inter,sans-serif}
+a{color:inherit;text-decoration:none;cursor:pointer}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+label{font-size:13px;font-weight:600;color:var(--muted);display:block;margin:12px 0 6px}
+.ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:12px;font-weight:600;transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn-p{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;box-shadow:0 8px 20px -8px rgba(79,70,229,.7)}
+.btn-g{background:#fff;border:1px solid var(--line)}
+.btn-a{background:var(--acc);color:#2a1a00;box-shadow:0 8px 20px -8px rgba(245,158,11,.8)}
+.btn-w{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-d{background:#fee2e2;color:#b91c1c}
+.btn-s{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn-i{padding:6px;border-radius:8px;color:var(--muted)}
+.btn-i:hover{background:var(--soft);color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrapf{flex-wrap:wrap}
+.g2,.g3,.g4{display:grid;gap:16px}
+.g2>*,.g3>*,.g4>*{min-width:0}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--pri)}
+.tag.ok{background:#d1fae5;color:#047857}.tag.warn{background:#fef3c7;color:#92400e}.tag.bad{background:#fee2e2;color:#b91c1c}.tag.gray{background:#eef0f4;color:#5b6178}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bar{height:8px;border-radius:99px;background:#eceef5;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pri),var(--pri2))}
+.bar.ok>i{background:var(--ok)}.bar.warn>i{background:var(--warn)}.bar.bad>i{background:var(--bad)}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff;flex:none}
+h2.sec{font-size:clamp(26px,3.4vw,38px);line-height:1.15;letter-spacing:-.02em}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pri)}
+
+/* ---------- landing ---------- */
+nav.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(15,18,48,.72);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-in{display:flex;align-items:center;gap:24px;height:66px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
+.brand b{color:var(--acc);font-weight:800}
+.links{display:flex;gap:22px;font-size:14px;font-weight:500;opacity:.85;margin-left:12px}
+.links a:hover{opacity:1;color:var(--acc)}
+.nav-r{margin-left:auto;display:flex;gap:10px;align-items:center}
+.lang{font-size:12px;font-weight:700;opacity:.8;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2)}
+.hero{position:relative;overflow:hidden;color:#fff;background:radial-gradient(1000px 500px at 85% 10%,rgba(124,58,237,.55),transparent 60%),radial-gradient(800px 500px at 0% 100%,rgba(79,70,229,.5),transparent 60%),#0f1230;margin-top:-66px;padding:130px 0 80px}
+.hero-in{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.06;letter-spacing:-.03em;margin:16px 0 18px}
+.hero h1 span{background:linear-gradient(90deg,#fbbf24,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:18px;opacity:.82;max-width:560px}
+.pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:600;padding:7px 14px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.pill i{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.25)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.stat{padding:16px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.stat .num{font-size:28px;font-weight:800}
+.stat div:last-child{font-size:13px;opacity:.7}
+.atom{position:relative;aspect-ratio:1;max-width:440px;margin:0 auto;width:100%}
+.atom svg{width:100%;height:100%}
+.orb{transform-origin:200px 200px;animation:spin 14s linear infinite}
+.orb.b{animation-duration:18s;animation-direction:reverse}.orb.c{animation-duration:22s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fchip{position:absolute;padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);font-family:Montserrat;font-weight:700;font-size:15px;animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px)}}
+section.blk{padding:84px 0}
+.feat .card{transition:transform .2s,box-shadow .2s}
+.feat .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -20px rgba(20,26,51,.35)}
+.fi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;color:#fff}
+.fi .ic{width:22px;height:22px}
+.seccard{cursor:pointer;position:relative;overflow:hidden}
+.seccard:hover{border-color:var(--pri)}
+.seccard .big{position:absolute;right:-6px;bottom:-18px;font-family:Montserrat;font-weight:800;font-size:84px;color:var(--soft);z-index:0}
+.seccard>*{position:relative;z-index:1}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.lb-row:last-child{border:0}
+.rank{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:13px;background:#eef0f4}
+.rank.r1{background:#fde68a;color:#78350f}.rank.r2{background:#e5e7eb;color:#374151}.rank.r3{background:#fed7aa;color:#7c2d12}
+.step .n{width:38px;height:38px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-family:Montserrat}
+.price.hot{background:linear-gradient(160deg,#1e1b4b,#3b2a8a);color:#fff;border:0;transform:scale(1.03)}
+.price .num{font-size:32px;font-weight:800}
+.price ul{list-style:none;margin:16px 0 20px;display:grid;gap:8px;font-size:14px}
+.price li{display:flex;gap:8px}
+.price li .ic{color:var(--ok);width:16px;height:16px;margin-top:3px}
+.parentband{background:linear-gradient(135deg,#eef0ff,#fdf2f8);border-radius:28px;padding:40px}
+.cta{background:radial-gradient(600px 300px at 80% 0,rgba(245,158,11,.35),transparent 60%),#0f1230;color:#fff;border-radius:28px;padding:48px;display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px}
+
+/* ---------- cabinet ---------- */
+.cab{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.side{background:var(--side);color:#aeb3d1;padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:3px}
+.side .brand{color:#fff;padding:0 10px 18px;font-size:17px}
+.side .who{display:flex;gap:10px;align-items:center;padding:12px;margin-bottom:12px;border-radius:14px;background:rgba(255,255,255,.06)}
+.side .who b{color:#fff;font-size:14px;display:block}
+.side .it{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:11px;font-weight:500;font-size:14px;text-align:left;width:100%}
+.side .it:hover{background:rgba(255,255,255,.06);color:#fff}
+.side .it.on{background:linear-gradient(135deg,rgba(79,70,229,.9),rgba(124,58,237,.9));color:#fff}
+.side .it .cnt{margin-left:auto;background:var(--acc);color:#2a1a00;font-size:11px;font-weight:800;padding:1px 7px;border-radius:99px}
+.side .sp{flex:1}
+.main{padding:26px 30px 40px;min-width:0}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.mhead h1{font-size:26px;letter-spacing:-.02em}
+.xp{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding:7px 12px;border-radius:99px;background:#fff;border:1px solid var(--line)}
+.hello{background:radial-gradient(500px 240px at 100% 0,rgba(245,158,11,.35),transparent 60%),linear-gradient(135deg,#312e81,#6d28d9);color:#fff;border:0}
+.hello .bar{background:rgba(255,255,255,.2)}.hello .bar>i{background:linear-gradient(90deg,#fbbf24,#f472b6)}
+.kpi .num{font-size:26px;font-weight:800;margin-top:4px}
+.kpi .lbl{font-size:13px;color:var(--muted)}
+.list-it{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff}
+.list-it+.list-it{margin-top:10px}
+.ti{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none}
+.tree .node{padding:2px 0}
+.tree .nrow{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;cursor:pointer}
+.tree .nrow:hover{background:var(--soft)}
+.tree .nrow.sel{background:var(--soft);box-shadow:inset 3px 0 0 var(--pri)}
+.tree .kids{margin-left:18px;border-left:1px dashed var(--line);padding-left:6px}
+.tree .chev{transition:transform .2s;color:var(--muted)}
+.tree .open>.nrow .chev{transform:rotate(90deg)}
+.pct{margin-left:auto;font-size:12px;font-weight:700;min-width:38px;text-align:right}
+.split{display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:18px;align-items:start}
+.sticky{position:sticky;top:20px}
+.split.wide{grid-template-columns:minmax(300px,440px) 1fr}
+.en .en-t{flex:1;min-width:0}.en .tag{white-space:nowrap}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+table.t td{padding:11px 12px;border-bottom:1px solid var(--line)}
+table.t tr.me td{background:#fffbeb}
+.tscroll{overflow-x:auto}
+.podium{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:14px;align-items:end}
+.pod{text-align:center;border-radius:18px;padding:18px 10px;color:#fff}
+.pod .av{width:52px;height:52px;margin:0 auto 8px;font-size:18px;border:3px solid rgba(255,255,255,.5)}
+.badge{text-align:center;padding:20px 14px}
+.badge .bi{width:64px;height:64px;border-radius:20px;margin:0 auto 10px;display:grid;place-items:center;font-size:30px}
+.badge.locked{opacity:.45;filter:grayscale(1)}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;background:#fff;font-weight:500;transition:.15s}
+.opt:hover{border-color:var(--pri)}
+.opt .l{width:28px;height:28px;border-radius:8px;background:var(--soft);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--pri);flex:none}
+.opt.right{border-color:var(--ok);background:#ecfdf5}.opt.wrong{border-color:var(--bad);background:#fef2f2}
+.chart{width:100%;height:auto;display:block}
+.ring{position:relative;width:120px;height:120px;margin:0 auto}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:Montserrat;font-size:24px}
+.chat{height:min(560px,62vh);overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:6px 4px}
+.msg{max-width:82%;padding:12px 15px;border-radius:16px;font-size:14px;line-height:1.55}
+.msg.ai{background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+.msg.me{background:var(--pri);color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin:0 2px;animation:blink 1s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:.2}}
+.en .en-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;margin-left:calc(var(--d)*20px)}
+.en .en-row:hover{background:var(--soft)}
+.en .en-row.sel{background:var(--soft);box-shadow:inset 3px 0 0 var(--pri)}
+.en .en-t{font-weight:600;font-size:14px}
+.en .en-act{margin-left:auto;display:flex;gap:2px;opacity:0;transition:.15s}
+.en .en-row:hover .en-act,.en .en-row.sel .en-act{opacity:1}
+.drop{border:2px dashed #c7cbe0;border-radius:16px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--pri);background:var(--soft);color:var(--pri)}
+.toggle{width:44px;height:26px;border-radius:99px;background:#d4d7e3;position:relative;flex:none;transition:.2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on{background:var(--ok)}.toggle.on::after{left:21px}
+.sched{display:grid;grid-template-columns:60px repeat(6,1fr);gap:6px;font-size:13px}
+.sched .c{min-height:54px;border-radius:10px;background:#fff;border:1px solid var(--line);padding:6px}
+.sched .ls{background:linear-gradient(135deg,#eef0ff,#f5f3ff);border-color:#c7d2fe}
+.sched .h{font-weight:700;text-align:center;color:var(--muted);padding:6px 0}
+/* modal / toast */
+.mback{position:fixed;inset:0;background:rgba(15,18,48,.55);backdrop-filter:blur(4px);display:grid;place-items:center;z-index:100;padding:16px;animation:fade .15s}
+.modal{background:#fff;border-radius:22px;width:100%;max-width:480px;max-height:90vh;overflow:auto;padding:26px;position:relative;animation:pop .2s}
+.modal h3{font-size:21px;margin-bottom:4px}
+.mx{position:absolute;right:14px;top:14px}
+@keyframes fade{from{opacity:0}}@keyframes pop{from{transform:scale(.96);opacity:0}}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f2f7;padding:5px;border-radius:13px;margin-top:14px}
+.seg button{padding:9px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+/* feedback mode (desktop only) */
+.fb-btn{position:fixed;right:22px;bottom:22px;z-index:90;display:none;align-items:center;gap:8px;padding:13px 18px;border-radius:99px;font-weight:700;background:#f59e0b;color:#2a1a00;box-shadow:0 10px 26px -8px rgba(245,158,11,.9)}
+.fb-btn .n{background:#2a1a00;color:#fff;border-radius:99px;font-size:12px;padding:1px 8px}
+.fb-btn.on{background:var(--ink);color:#fff}
+body.fbm #app *{cursor:crosshair!important}
+.fb-hl{outline:2px dashed #f59e0b!important;outline-offset:3px;border-radius:8px}
+#fbbar{position:fixed;top:0;left:0;right:0;z-index:96;display:none;background:#f59e0b;color:#2a1a00;text-align:center;padding:9px 16px;font-weight:700;font-size:14px}
+.fb-panel{position:fixed;right:22px;bottom:86px;width:380px;max-height:72vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 60px -20px rgba(15,18,48,.45);z-index:95;padding:18px}
+.fb-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.fb-pin{position:absolute;z-index:80;width:24px;height:24px;border-radius:50%;background:#f59e0b;color:#2a1a00;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.25);cursor:pointer}
+@media(min-width:861px) and (pointer:fine){.fb-btn{display:inline-flex}}
+@media(max-width:860px){.fb-pin,.fb-panel{display:none}}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:calc(100% - 32px)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+@media(max-width:980px){.split.wide{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}.hero-in{grid-template-columns:1fr}.atom{max-width:300px}.split{grid-template-columns:1fr}.sticky{position:static}}
+@media(max-width:860px){
+ .cab{grid-template-columns:1fr}
+ .side{position:fixed;bottom:0;top:auto;height:auto;width:100%;flex-direction:row;overflow-x:auto;z-index:30;padding:8px;gap:4px}
+ .side .brand,.side .who,.side .sp{display:none}
+ .side .it{flex-direction:column;font-size:11px;gap:3px;padding:7px 10px;white-space:nowrap;width:auto;min-width:68px}
+ .side .it .cnt{display:none}
+ .main{padding:18px 16px 96px}
+ .links{display:none}
+}
+@media(max-width:620px){
+ .g2,.g3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}
+ .nav-r .lang,.nav-r .btn-g{display:none}
+ section.blk{padding:60px 0}.cta,.parentband{padding:28px}
+ .podium{gap:8px}.price.hot{transform:none}
+ .sched{grid-template-columns:44px repeat(6,minmax(70px,1fr));overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+<div id="fbbar" class="fb-ui">Пікір режимі: өзгерткіңіз келетін блокты басыңыз · шығу — Esc немесе төмендегі батырма</div>
+<div id="fbpins" class="fb-ui" style="position:absolute;left:0;top:0"></div>
+<div id="fbpanel" class="fb-ui"></div>
+<button id="fbbtn" class="fb-btn fb-ui" onclick="fbToggle()"></button>
+<script>
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+function store(k,v){try{if(v===undefined){const x=localStorage.getItem('alpa_'+k);return x?JSON.parse(x):null}localStorage.setItem('alpa_'+k,JSON.stringify(v))}catch(e){return null}}
+function h(s){let x=2166136261;for(const ch of String(s)){x^=ch.charCodeAt(0);x=Math.imul(x,16777619)}return((x>>>0)%10000)/10000}
+const P={home:'M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z',tree:'M4 4h6v6H4zM14 14h6v6h-6zM7 10v4a3 3 0 0 0 3 3h4',hw:'M9 3h6v3H9zM6 5h12v16H6zM9 11h6M9 15h4',bolt:'M13 2 4 14h7l-1 8 9-12h-7z',trophy:'M8 4h8v5a4 4 0 0 1-8 0zM8 5H4v2a3 3 0 0 0 3 3M16 5h4v2a3 3 0 0 1-3 3M12 13v4M8 21h8M10 17h4',star:'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',spark:'M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6',users:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M17 11a3 3 0 1 0 0-6M22 21a6 6 0 0 0-5-6',inbox:'M3 13l3-9h12l3 9v7H3zM3 13h5l1 3h6l1-3h5',cal:'M4 6h16v15H4zM4 10h16M8 3v4M16 3v4',logout:'M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10',upload:'M12 16V4M7 9l5-5 5 5M4 20h16',flame:'M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-3 3-5 5-5 8a7 7 0 0 0 7 7z',play:'M7 4v16l13-8z',file:'M6 2h9l5 5v15H6zM14 2v6h6',link:'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',plus:'M12 5v14M5 12h14',edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',trash:'M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14',up:'M6 15l6-6 6 6',down:'M6 9l6 6 6-6',chev:'M9 6l6 6-6 6',send:'M22 2 11 13M22 2l-7 20-4-9-9-4z',check:'M5 12l5 5L20 7',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',lock:'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4',x:'M6 6l12 12M18 6 6 18',phone:'M5 3h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z',list:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',target:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',globe:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20'};
+const ic=(n,st='')=>`<svg class="ic" viewBox="0 0 24 24" style="${st}"><path d="${P[n]}"/></svg>`;
+const COLORS=['#4f46e5','#7c3aed','#db2777','#ea580c','#0891b2','#059669','#ca8a04','#2563eb'];
+const avc=n=>COLORS[Math.floor(h(n)*COLORS.length)];
+const av=(n,sz)=>`<div class="av" style="background:${avc(n)};${sz?`width:${sz}px;height:${sz}px`:''}">${esc(n[0])}</div>`;
+function toast(m){const t=$('#toast');t.innerHTML=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function openModal(html){$('#modal').innerHTML=`<div class="mback" onclick="if(event.target===this)closeModal()"><div class="modal"><button class="btn-i mx" onclick="closeModal()">${ic('x')}</button>${html}</div></div>`}
+function closeModal(){$('#modal').innerHTML=''}
+const logo=(s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 40 40"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#lg)"/><ellipse cx="20" cy="20" rx="13" ry="5" fill="none" stroke="#fff" stroke-width="1.8"/><ellipse cx="20" cy="20" rx="13" ry="5" fill="none" stroke="#fff" stroke-width="1.8" transform="rotate(60 20 20)"/><ellipse cx="20" cy="20" rx="13" ry="5" fill="none" stroke="#fff" stroke-width="1.8" transform="rotate(-60 20 20)"/><circle cx="20" cy="20" r="2.8" fill="#fbbf24"/></svg>`;
+
+/* ================= data ================= */
+const TREE0=[
+ {id:'g56',t:'5–6 сынып: жаратылыстану негіздері',g:'5–6',c:[{id:'meas',t:'Физикалық шамалар және өлшеу'},{id:'mat',t:'Зат және оның күйлері'}]},
+ {id:'mech',t:'Механика',g:'7–10',c:[
+  {id:'kin',t:'Кинематика',c:[{id:'kin1',t:'Бірқалыпты қозғалыс'},{id:'kin2',t:'Үдемелі қозғалыс'},{id:'kin3',t:'Шеңбер бойымен қозғалыс'}]},
+  {id:'dyn',t:'Динамика',c:[{id:'dyn1',t:'Ньютон заңдары'},{id:'dyn2',t:'Бүкіләлемдік тартылыс'},{id:'dyn3',t:'Үйкеліс күші'}]},
+  {id:'cons',t:'Сақталу заңдары',c:[{id:'cons1',t:'Импульс'},{id:'cons2',t:'Жұмыс және энергия'}]},
+  {id:'hyd',t:'Гидро- және аэростатика',c:[{id:'hyd1',t:'Қысым'},{id:'hyd2',t:'Архимед заңы'}]}]},
+ {id:'mol',t:'Молекулалық физика',g:'8, 10',c:[{id:'mkt',t:'МКТ негіздері'},{id:'gas',t:'Газ заңдары'},{id:'td',t:'Термодинамика'}]},
+ {id:'el',t:'Электродинамика',g:'8, 10',c:[{id:'es',t:'Электростатика'},{id:'dc',t:'Тұрақты ток'},{id:'mag',t:'Магнит өрісі'},{id:'emi',t:'Электромагниттік индукция'}]},
+ {id:'osc',t:'Тербелістер мен толқындар',g:'9, 11',c:[{id:'mo',t:'Механикалық тербелістер'},{id:'emo',t:'Электромагниттік тербелістер'},{id:'wav',t:'Толқындар'}]},
+ {id:'opt',t:'Оптика',g:'8, 11',c:[{id:'geo',t:'Геометриялық оптика'},{id:'wopt',t:'Толқындық оптика'}]},
+ {id:'q',t:'Кванттық және ядролық физика',g:'11',c:[{id:'pe',t:'Фотоэффект'},{id:'atom',t:'Атом құрылысы'},{id:'nuc',t:'Атом ядросы'}]}
+];
+const HW0=[
+ {id:1,t:'Ньютон заңдары: 10 есеп',topic:'dyn1',due:'2026-10-12',st:'new',xp:60,grp:'11 · ҰБТ тобы'},
+ {id:2,t:'Импульс — тақырып тесті',topic:'cons1',due:'2026-10-14',st:'new',xp:40,grp:'11 · ҰБТ тобы'},
+ {id:3,t:'Үдемелі қозғалыс графиктері',topic:'kin2',due:'2026-10-08',st:'checked',score:92,xp:60,grp:'11 · ҰБТ тобы',cm:'Графиктерді өте жақсы оқисың. 7-есепте бірлікке назар аудар.'},
+ {id:4,t:'Газ заңдары: зертханалық жұмыс',topic:'gas',due:'2026-10-06',st:'submitted',xp:80,grp:'11 · ҰБТ тобы'},
+ {id:5,t:'Тұрақты ток: аралас тізбектер',topic:'dc',due:'2026-10-03',st:'checked',score:74,xp:60,grp:'11 · ҰБТ тобы',cm:'Параллель қосуда кедергіні есептеу әлі қиын. Конспектінің 3-бетін қайтала.'}
+];
+const APPS0=[
+ {n:'Ерлан (әкесі)',gr:'10',ph:'+7 701 *** 12 40',goal:'ҰБТ-ға дайындық',plan:'Топтық сабақ',d:'09.10',st:'new'},
+ {n:'Гүлназ (анасы)',gr:'7',ph:'+7 747 *** 88 05',goal:'Үлгерімді көтеру',plan:'Жеке сабақ',d:'08.10',st:'called'}
+];
+const NAMES=['Айдана С.','Нұрсұлтан Е.','Әлихан Б.','Аружан Т.','Дастан К.','Мадина О.','Ерасыл Ж.','Жансая М.','Бекзат А.','Інжу Р.','Темірлан Н.','Әйгерім Д.','Санжар Қ.','Дильназ У.','Арман С.','Томирис Ғ.','Ернұр П.','Камила И.','Алижан Х.','Назерке Ш.','Ислам В.','Балнұр Л.','Абылай З.','Сымбат Ф.'];
+const GR=[11,11,10,11,9,10,11,8,11,10,9,11,10,7,11,9,10,11,8,11,10,9,11,10];
+const grpOf=g=>g>=11?'11 · ҰБТ тобы':g>=9?'9–10 топ':'7–8 топ';
+const STU=NAMES.map((n,i)=>({n,gr:GR[i],grp:grpOf(GR[i]),lvl:i===0?.8:.45+h(n)*.5,me:i===0}));
+const ME=STU[0];
+const MEOVR={emi:41,wopt:48,nuc:52,mag:58,dyn1:94,kin2:92,cons1:88,meas:100,mat:100};
+const LEVELS=[[0,'Жаңадан бастаушы'],[1500,'Зерттеуші'],[2800,'Тәжірибеші'],[3800,'Ньютон'],[4800,'Эйнштейн']];
+const WEEKS=[58,61,60,66,64,70,68,73,75,72,79,82];
+const QS=[
+ {q:'Тыныштық күйден 4 м/с² үдеумен қозғалған дене 2 с ішінде қандай жол жүреді?',o:['4 м','8 м','16 м','2 м'],a:1,e:'s = at²/2 = 4·2²/2 = 8 м'},
+ {q:'Массасы 2 кг денеге 10 Н күш әсер етеді. Дененің үдеуі қандай?',o:['20 м/с²','5 м/с²','0,2 м/с²','12 м/с²'],a:1,e:'Ньютонның II заңы: a = F/m = 10/2 = 5 м/с²'},
+ {q:'Кедергісі 4 Ом өткізгіштен 3 А ток өтеді. Өткізгіш ұштарындағы кернеу?',o:['12 В','7 В','0,75 В','1,3 В'],a:0,e:'Ом заңы: U = IR = 3·4 = 12 В'},
+ {q:'Изотермиялық процесте қандай шама тұрақты болады?',o:['Қысым','Көлем','Температура','Тығыздық'],a:2,e:'«Изо-термо» — температура тұрақты (Бойль–Мариотт заңы)'},
+ {q:'Линзаның оптикалық күші 5 дптр. Оның фокус аралығы?',o:['5 м','0,5 м','0,2 м','2 м'],a:2,e:'F = 1/D = 1/5 = 0,2 м'},
+ {q:'Жиілігі 2 Гц тербелістің периоды қандай?',o:['2 с','0,5 с','4 с','1 с'],a:1,e:'T = 1/ν = 1/2 = 0,5 с'}
+];
+const BADGES=[['🚀','Алғашқы қадам','Бірінші сабақты аяқтадың',1],['🔥','7 күн қатарынан','Апта бойы күн сайын оқыдың',1],['🍎','Ньютонның досы','Динамика 90%-дан жоғары',1],['⚡','Жылдам ой','Тестті 5 минутта мінсіз тапсырдың',1],['📚','Үй жұмысының шебері','10 үй жұмысы мерзімінде',1],['🥉','Топ-3','Апталық рейтингте үздік үштік',0],['🦉','Түнгі үкі','22:00-ден кейін 5 есеп шығардың',0],['💯','Мінсіз тест','ҰБТ сынағында 50/50',0],['🧲','Магнит шебері','Электродинамика 85%-дан жоғары',0],['🌈','Оптик','Оптика бөлімін толық аяқтадың',0]];
+
+/* ================= state ================= */
+const S={view:'landing',tab:'',tree:store('tree')||clone(TREE0),hw:store('hw')||clone(HW0),apps:store('apps')||clone(APPS0),xpb:store('xpb')||0,
+ open:{mech:1,dyn:1,el:1},selTopic:'dyn1',selEdit:'dyn1',rScope:'all',rPeriod:'all',rGroup:'all',hwF:'all',ptF:'all',
+ test:{i:0,pick:null,ok:0,done:false,topic:null},chat:null,game:store('game')||{lesson:20,hw:60,test:40,streak:10,league:true,badges:true}};
+function save(){store('tree',S.tree);store('hw',S.hw);store('apps',S.apps);store('xpb',S.xpb);store('game',S.game)}
+function initMats(nodes){for(const n of nodes){if(n.c&&n.c.length)initMats(n.c);else if(!n.m)n.m=[{type:'video',name:'Бейнесабақ: '+n.t},{type:'pdf',name:'Конспект.pdf'},{type:'tasks',name:'Есептер жинағы (20 есеп)'},{type:'test',name:'Тақырып тесті (10 сұрақ)'}]}}
+initMats(S.tree);
+
+/* ================= model ================= */
+function leaves(nodes=S.tree,acc=[],path=[],forStudent=false){for(const n of nodes){if(forStudent&&n.hidden)continue;if(n.c&&n.c.length)leaves(n.c,acc,[...path,n.t],forStudent);else acc.push({id:n.id,t:n.t,path,root:path[0]||n.t})}return acc}
+function find(id,nodes=S.tree,parent=null){for(let i=0;i<nodes.length;i++){const n=nodes[i];if(n.id===id)return{n,arr:nodes,i,parent};if(n.c){const r=find(id,n.c,n);if(r)return r}}return null}
+function sc(st,id){if(String(id).startsWith('n'))return null;if(st.me&&MEOVR[id]!=null)return MEOVR[id];if(h(st.n+id+'x')<.1)return null;return Math.round(Math.min(100,Math.max(15,st.lvl*100-25+h(st.n+id)*50)))}
+function avgOf(st,ids){const v=ids.map(id=>sc(st,id)).filter(x=>x!=null);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null}
+function nodeAvg(st,n){return avgOf(st,leaves([n]).map(l=>l.id))}
+function xpOf(st){return Math.round(leaves().reduce((a,l)=>a+(sc(st,l.id)||0),0)*1.6+h(st.n+'xp')*600)+(st.me?S.xpb:0)}
+function lvlOf(x){let i=0;LEVELS.forEach((l,k)=>{if(x>=l[0])i=k});const nx=LEVELS[i+1];return{i,name:LEVELS[i][1],next:nx?nx[0]:null,prev:LEVELS[i][0],nextName:nx?nx[1]:null}}
+function scoreFor(st,scope,period){
+ if(scope!=='all'){const s=sc(st,scope);return s==null?null:s}
+ if(period==='week')return Math.round(h(st.n+'wk')*350+st.lvl*200)+(st.me?Math.min(S.xpb,300):0);
+ if(period==='month')return Math.round(h(st.n+'mo')*900+st.lvl*900)+(st.me?S.xpb:0);
+ return xpOf(st)}
+function ranked(scope,period,grp='all'){return STU.filter(s=>grp==='all'||s.grp===grp).map(s=>({...s,v:scoreFor(s,scope,period)})).filter(s=>s.v!=null).sort((a,b)=>b.v-a.v)}
+const myRank=()=>ranked('all','all').findIndex(s=>s.me)+1;
+const clr=v=>v==null?'gray':v>=80?'ok':v>=60?'':v>=50?'warn':'bad';
+const fmtD=d=>{const [y,m,dd]=d.split('-');return `${dd}.${m}`};
+const tname=id=>{const r=find(id);return r?r.n.t:'—'};
+
+/* ================= charts ================= */
+function lineChart(data,{w=640,ht=230,labels=[],max=100,color='#4f46e5',unit='%'}={}){
+ const pl=36,pr=14,pt=16,pb=30,iw=w-pl-pr,ih=ht-pt-pb;const x=i=>pl+i*iw/(data.length-1),y=v=>pt+ih-(v/max)*ih;
+ const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+ let g='';[0,25,50,75,100].forEach(v=>{g+=`<line x1="${pl}" x2="${w-pr}" y1="${y(v)}" y2="${y(v)}" stroke="#eceef5"/><text x="${pl-8}" y="${y(v)+4}" font-size="11" fill="#9aa0b8" text-anchor="end">${v}</text>`});
+ labels.forEach((l,i)=>{if(l)g+=`<text x="${x(i)}" y="${ht-8}" font-size="11" fill="#9aa0b8" text-anchor="middle">${l}</text>`});
+ const area=`M${x(0)},${y(0)} L${pts.replace(/ /g,' L')} L${x(data.length-1)},${y(0)} Z`;
+ const dots=data.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="${i===data.length-1?5:3}" fill="${i===data.length-1?color:'#fff'}" stroke="${color}" stroke-width="2"><title>${labels[i]||''}: ${v}${unit}</title></circle>`).join('');
+ return `<svg class="chart" viewBox="0 0 ${w} ${ht}"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".22"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>${g}<path d="${area}" fill="url(#ga)"/><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>${dots}</svg>`}
+function ring(v,max,color,label,sub){const r=50,c=2*Math.PI*r,p=Math.min(1,v/max);return `<div style="text-align:center"><div class="ring"><svg viewBox="0 0 120 120" width="120" height="120"><circle cx="60" cy="60" r="${r}" fill="none" stroke="#eceef5" stroke-width="11"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 60 60)"/></svg><b>${label}</b></div><div class="small mt8" style="font-weight:600">${sub}</div></div>`}
+
+/* ================= router ================= */
+const TABS={
+ student:[['home','Басты бет','home'],['topics','Тақырыптар','tree'],['hw','Үй жұмысы','hw'],['test','Тест / ҰБТ сынақ','bolt'],['rating','Рейтинг','trophy'],['badges','Жетістіктер','star']],
+ parent:[['overview','Шолу','chart'],['topics','Тақырыптар бойынша','tree'],['hw','Үй жұмысы','hw'],['ai','AI-көмекші','spark']],
+ teacher:[['tree','Тақырыптар ағашы','tree'],['hw','Үй жұмыстары','hw'],['students','Оқушылар','users'],['rating','Рейтинг','trophy'],['apps','Өтінімдер','inbox'],['game','Геймификация','star'],['sched','Кесте','cal']]};
+function go(view,tab){S.view=view;S.tab=tab||(TABS[view]?TABS[view][0][0]:'');closeModal();render();window.scrollTo(0,0)}
+function tab(t){S.tab=t;render();window.scrollTo(0,0)}
+function render(){$('#app').innerHTML=S.view==='landing'?vLanding():vCab();if(S.view==='parent'&&S.tab==='ai'){const c=$('#chat');if(c)c.scrollTop=c.scrollHeight}}
+
+/* ================= landing ================= */
+function vLanding(){
+ const top=ranked('all','all').slice(0,5);
+ const secColors=['#0891b2','#4f46e5','#7c3aed','#db2777','#ea580c','#ca8a04','#059669'];
+ return `
+<nav class="top"><div class="wrap nav-in">
+ <a class="brand" onclick="go('landing')">${logo()}<span>Alpa<b>Physics</b></span></a>
+ <div class="links"><a href="#topics">Тақырыптар</a><a href="#rating">Рейтинг</a><a href="#parents">Ата-анаға</a><a href="#price">Бағалар</a><a href="#reviews">Пікірлер</a></div>
+ <div class="nav-r"><button class="lang" onclick="toast('Орысша нұсқа келесі кезеңде қосылады')">ҚАЗ · РУС</button><button class="btn btn-w btn-s" onclick="loginModal()">Кіру</button><button class="btn btn-a btn-s" onclick="trialModal()">Тегін сабақ</button></div>
+</div></nav>
+<header class="hero"><div class="wrap">
+ <div class="hero-in">
+  <div>
+   <span class="pill"><i></i>5–11 сынып · ҰБТ физика · қазақ тілінде</span>
+   <h1>Физиканы <span>түсініп</span> оқы — ҰБТ-ны сеніммен тапсыр</h1>
+   <p class="lead">Алпа ағайдың авторлық курсы: тақырыптар картасы, үй жұмысы, ұпай мен рейтинг, ал ата-анаға — баланың дамуы туралы AI-есеп. Бәрі бір жерде.</p>
+   <div class="row wrapf mt24"><button class="btn btn-a" onclick="trialModal()">Тегін сынақ сабаққа жазылу ${ic('chev')}</button><button class="btn btn-w" onclick="go('student','test')">${ic('bolt')} Деңгейіңді тексер · 6 сұрақ</button></div>
+  </div>
+  <div class="atom">
+   <svg viewBox="0 0 400 400"><defs><radialGradient id="nuc"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient></defs>
+    <circle cx="200" cy="200" r="190" fill="none" stroke="rgba(255,255,255,.06)"/><circle cx="200" cy="200" r="130" fill="none" stroke="rgba(255,255,255,.05)"/>
+    <g class="orb"><ellipse cx="200" cy="200" rx="160" ry="56" fill="none" stroke="rgba(165,180,252,.55)" stroke-width="2"/><circle cx="360" cy="200" r="9" fill="#a5b4fc"/></g>
+    <g class="orb b" style="transform:rotate(60deg)"><g class="orb b"><ellipse cx="200" cy="200" rx="160" ry="56" fill="none" stroke="rgba(244,114,182,.5)" stroke-width="2" transform="rotate(60 200 200)"/><circle cx="120" cy="61" r="9" fill="#f472b6"/></g></g>
+    <g class="orb c"><ellipse cx="200" cy="200" rx="160" ry="56" fill="none" stroke="rgba(52,211,153,.5)" stroke-width="2" transform="rotate(-60 200 200)"/><circle cx="120" cy="339" r="9" fill="#34d399"/></g>
+    <circle cx="200" cy="200" r="26" fill="url(#nuc)"/><circle cx="200" cy="200" r="40" fill="none" stroke="rgba(251,191,36,.3)" stroke-width="8"/></svg>
+   <div class="fchip" style="left:-4%;top:12%">F = ma</div>
+   <div class="fchip" style="right:-2%;top:30%;animation-delay:1.5s">E = mc²</div>
+   <div class="fchip" style="left:6%;bottom:10%;animation-delay:3s">U = IR</div>
+   <div class="fchip" style="right:8%;bottom:4%;animation-delay:2s">λ = v/ν</div>
+  </div>
+ </div>
+ <div class="stats">
+  <div class="stat"><div class="num">15+ жыл</div><div>мектепте сабақ беру</div></div>
+  <div class="stat"><div class="num">38/50</div><div>оқушылардың ҰБТ орташа балы</div></div>
+  <div class="stat"><div class="num">1 200+</div><div>дайындалған оқушы</div></div>
+  <div class="stat"><div class="num">${leaves().length}</div><div>тақырып, 5-тен 11 сыныпқа дейін</div></div>
+ </div>
+</div></header>
+
+<section class="blk feat"><div class="wrap">
+ <div class="kicker">Неге Alpa Physics</div><h2 class="sec mt8">Оқу — ойын сияқты қызық, нәтиже — анық</h2>
+ <div class="g4 mt24">
+  ${[['tree','#4f46e5','Тақырыптар ағашы','Бүкіл физика 5–11 сынып бойынша құрылымдалған. Әр тақырыпта бейнесабақ, конспект, есептер және тест.'],
+     ['star','#f59e0b','Ұпай мен деңгейлер','Сабақ, үй жұмысы, тест үшін XP жина. Деңгейіңді «Ньютоннан» «Эйнштейнге» дейін көтер.'],
+     ['trophy','#db2777','Рейтинг','Жалпы рейтинг пен әр тақырып бойынша жеке рейтинг. Апталық лигада жарыс.'],
+     ['spark','#059669','Ата-анаға AI-есеп','Ата-ана баланың қазіргі формасын көреді және AI-көмекшіден есеп сұрайды.']]
+   .map(f=>`<div class="card"><div class="fi" style="background:${f[1]}">${ic(f[0])}</div><h3 style="font-size:17px">${f[2]}</h3><p class="muted small mt8">${f[3]}</p></div>`).join('')}
+ </div>
+</div></section>
+
+<section class="blk" id="topics" style="background:#fff;border-block:1px solid var(--line)"><div class="wrap">
+ <div class="row between wrapf"><div><div class="kicker">Тақырыптар картасы</div><h2 class="sec mt8">Бүкіл физика — бір ағашта</h2></div><button class="btn btn-g" onclick="go('student','topics')">Толық ағашты ашу ${ic('chev')}</button></div>
+ <div class="g3 mt24">
+  ${S.tree.filter(n=>!n.hidden).map((n,i)=>{const subs=(n.c||[]);return `<div class="card seccard" onclick="S.open['${n.id}']=1;go('student','topics')"><span class="big">${String(i+1).padStart(2,'0')}</span><div class="row between"><span class="tag" style="background:${secColors[i%7]}1a;color:${secColors[i%7]}">${n.g?esc(n.g)+' сынып':'Бөлім'}</span><span class="tiny muted">${leaves([n]).length} тақырып</span></div><h3 style="font-size:18px;margin-top:12px">${esc(n.t)}</h3><div class="chips mt12">${subs.slice(0,4).map(s=>`<span class="tag gray">${esc(s.t)}</span>`).join('')}${subs.length>4?`<span class="tag gray">+${subs.length-4}</span>`:''}</div></div>`}).join('')}
+ </div>
+</div></section>
+
+<section class="blk" id="rating"><div class="wrap g2" style="align-items:center;gap:40px">
+ <div><div class="kicker">Рейтинг</div><h2 class="sec mt8">Жарыс мотивациялайды</h2><p class="muted mt12" style="font-size:17px">Әр оқушының жалпы рейтингі және әр тақырып бойынша жеке орны бар. Апталық лига жаңарып тұрады — кез келген адам бірінші бола алады.</p>
+  <div class="row wrapf mt24"><button class="btn btn-p" onclick="go('student','rating')">${ic('trophy')} Толық рейтинг</button><button class="btn btn-g" onclick="S.rScope='dyn1';go('student','rating')">«Ньютон заңдары» бойынша</button></div></div>
+ <div class="card" style="padding:8px 22px"><div class="row between" style="padding:14px 0 6px"><b>Үздік бестік · барлық уақыт</b><span class="tag">XP</span></div>
+  ${top.map((s,i)=>`<div class="lb-row"><span class="rank ${i<3?'r'+(i+1):''}">${i+1}</span>${av(s.n)}<div style="flex:1"><b>${esc(s.n)}</b><div class="tiny muted">${s.gr}-сынып · ${lvlOf(s.v).name}</div></div><b class="num">${s.v.toLocaleString('ru')}</b></div>`).join('')}
+ </div>
+</div></section>
+
+<section class="blk" id="how" style="padding-top:0"><div class="wrap">
+ <div class="kicker">Қалай оқимыз</div><h2 class="sec mt8">Үш қадам</h2>
+ <div class="g3 mt24 step">
+  ${[['Тегін сынақ сабақ','Танысамыз, деңгейді анықтайтын тест жазамыз, мақсатты бірге қоямыз.'],['Жеке жол','Ағаштағы әлсіз тақырыптар белгіленеді. Сабақ, үй жұмысы, тест — бәрі кабинетте.'],['Апта сайын бақылау','Рейтинг, ұпай, ата-анаға есеп. ҰБТ-ға дейін нақты болжам көрініп тұрады.']].map((s,i)=>`<div class="card"><div class="n">${i+1}</div><h3 style="font-size:18px;margin-top:14px">${s[0]}</h3><p class="muted small mt8">${s[1]}</p></div>`).join('')}
+ </div>
+</div></section>
+
+<section class="blk" id="parents" style="padding-top:0"><div class="wrap"><div class="parentband g2" style="align-items:center;gap:32px">
+ <div><div class="kicker">Ата-анаға</div><h2 class="sec mt8">Бала қалай оқып жатқанын бір көзқараспен көріңіз</h2>
+  <p class="muted mt12">Қазіргі форма мен жалпы деңгей, тақырыптар бойынша прогресс, үй жұмысы, қатысу. Сұрақ туса — AI-көмекші түсінікті тілмен жауап береді.</p>
+  <button class="btn btn-p mt24" onclick="go('parent')">${ic('eye')} Ата-ана кабинетін көру</button></div>
+ <div class="card"><div class="g2" style="gap:6px">${ring(77,100,'#4f46e5','77%','Қазіргі форма')}${ring(69,100,'#a78bfa','69%','Жалпы деңгей')}</div>
+  <div class="msg ai mt16" style="max-width:100%"><b>AI-көмекші:</b> Айдана соңғы 4 аптада +8 пайыздық тармаққа өсті. Әлсіз жері — электромагниттік индукция (41%). Аптасына 2 рет 20 минуттан жаттығу ұсынамын.</div></div>
+</div></div></section>
+
+<section class="blk" id="price" style="background:#fff;border-block:1px solid var(--line)"><div class="wrap">
+ <div style="text-align:center"><div class="kicker">Бағалар</div><h2 class="sec mt8">Өзіңізге ыңғайлы форматты таңдаңыз</h2></div>
+ <div class="g3 mt24" style="align-items:center">
+  ${[['Топтық сабақ','25 000','айына · 8 сабақ',['6–8 оқушыдан тұратын топ','Үй жұмысы + тексеру','Рейтинг пен геймификация','Ата-анаға ай сайынғы есеп'],0],
+     ['ҰБТ интенсив','45 000','айына · 12 сабақ',['ҰБТ форматындағы апталық сынақ','Әлсіз тақырыптар бойынша жеке жоспар','Барлық материалдар мен тесттер','Ата-анаға апталық AI-есеп'],1],
+     ['Жеке сабақ','6 000','1 сабақ · 60 мин',['Ағаймен бетпе-бет','Кесте өзіңізге ыңғайлы','Олимпиадаға дайындық','Кабинетке толық қолжетімділік'],0]]
+   .map(p=>`<div class="card price ${p[4]?'hot':''}">${p[4]?'<span class="tag" style="background:#fbbf24;color:#2a1a00">Ең танымал</span>':''}<h3 style="font-size:19px;margin-top:${p[4]?10:0}px">${p[0]}</h3><div class="mt12"><span class="num">${p[1]} ₸</span> <span class="small" style="opacity:.7">${p[2]}</span></div><ul>${p[3].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul><button class="btn ${p[4]?'btn-a':'btn-g'}" style="width:100%" onclick="trialModal('${p[0]}')">Жазылу</button></div>`).join('')}
+ </div>
+</div></section>
+
+<section class="blk" id="reviews"><div class="wrap">
+ <div class="kicker">Пікірлер</div><h2 class="sec mt8">Оқушылар мен ата-аналар не дейді</h2>
+ <div class="g3 mt24">
+  ${[['Дана, 2025 түлегі','Физикадан 46 балл алдым! Ағай күрделі тақырыпты қарапайым мысалмен түсіндіреді. Рейтингте бірінші болу үшін түні бойы есеп шығарған кездерім болды 😄'],['Сәуле, анасы','Ұлымның қай тақырыпта қиналатынын енді нақты көремін. Апталық есеп өте ыңғайлы, сабақтан кейін ағайға қоңырау шалудың қажеті жоқ.'],['Нұрлан, 10-сынып','Бұрын физиканы жек көретінмін. Қазір «Ньютон» деңгейіндемін, ағаштағы тақырыптарды бір-бірлеп жабу қызық.']].map(r=>`<div class="card"><div style="color:#f59e0b;letter-spacing:2px">★★★★★</div><p class="mt12">${r[1]}</p><div class="row mt16">${av(r[0])}<b class="small">${r[0]}</b></div></div>`).join('')}
+ </div>
+ <div class="cta mt24"><div><h2 style="font-size:clamp(24px,3vw,32px)">Бірінші сабақ — тегін</h2><p style="opacity:.75" class="mt8">Деңгейді анықтаймыз және ҰБТ-ға дейінгі жоспар құрамыз.</p></div><div class="row wrapf"><button class="btn btn-a" onclick="trialModal()">Өтінім қалдыру</button><button class="btn btn-w" onclick="toast('WhatsApp ашылады (демо)')">${ic('phone')} WhatsApp</button></div></div>
+</div></section>
+<footer><div class="wrap row between wrapf"><div class="row">${logo(28)}<span>© 2026 Alpa Physics · Алпа ағайдың физика мектебі</span></div>
+ <div class="row wrapf"><a onclick="toast('Instagram (демо)')">Instagram</a><a onclick="toast('Telegram-арна (демо)')">Telegram</a><a onclick="toast('TikTok (демо)')">TikTok</a><a onclick="go('teacher')" style="color:var(--pri);font-weight:600">Мұғалім кабинеті →</a></div></div></footer>`}
+
+function loginModal(role='student'){openModal(`<h3>Кабинетке кіру</h3><p class="muted small">Рөлді таңдаңыз</p>
+ <div class="seg">${[['student','Оқушы'],['parent','Ата-ана'],['teacher','Мұғалім']].map(r=>`<button class="${r[0]===role?'on':''}" onclick="loginModal('${r[0]}')">${r[1]}</button>`).join('')}</div>
+ <label>Телефон нөмірі</label><input placeholder="+7 7__ ___ __ __">
+ <label>Құпия сөз</label><input type="password" placeholder="••••••••">
+ <button class="btn btn-p mt16" style="width:100%" onclick="go('${role}')">Кіру</button>
+ <div class="row between mt12 small"><a class="muted" onclick="toast('SMS-код жіберілді (демо)')">Құпия сөзді ұмыттым</a><a style="color:var(--pri);font-weight:600" onclick="go('${role}')">Демо ретінде кіру →</a></div>`)}
+function trialModal(plan=''){openModal(`<h3>Тегін сынақ сабақ</h3><p class="muted small">Алпа ағай сізге 1 күн ішінде хабарласады</p>
+ <label>Аты-жөні</label><input id="f_n" placeholder="Мысалы: Айдана / Айдананың анасы">
+ <div class="g2" style="gap:10px"><div><label>Сынып</label><select id="f_g">${[5,6,7,8,9,10,11].map(g=>`<option ${g===11?'selected':''}>${g}</option>`).join('')}</select></div><div><label>Формат</label><select id="f_p">${['Топтық сабақ','ҰБТ интенсив','Жеке сабақ'].map(p=>`<option ${p===plan?'selected':''}>${p}</option>`).join('')}</select></div></div>
+ <label>Телефон</label><input id="f_ph" placeholder="+7 7__ ___ __ __">
+ <label>Мақсат</label><select id="f_goal"><option>ҰБТ-ға дайындық</option><option>Үлгерімді көтеру</option><option>Олимпиада</option></select>
+ <button class="btn btn-a mt16" style="width:100%" onclick="sendApp()">Өтінім жіберу</button>`)}
+function sendApp(){const n=$('#f_n').value.trim(),ph=$('#f_ph').value.trim();if(!n||!ph){toast('Аты мен телефонды толтырыңыз');return}
+ S.apps.unshift({n,gr:$('#f_g').value,ph,goal:$('#f_goal').value,plan:$('#f_p').value,d:new Date().toLocaleDateString('ru').slice(0,5),st:'new'});save();closeModal();toast('✅ Өтінім жіберілді! Ол мұғалім кабинетіндегі «Өтінімдер» бөлімінде пайда болды')}
+
+/* ================= cabinet shell ================= */
+function vCab(){
+ const v=S.view,tabs=TABS[v];
+ const who={student:[ME.n,'11-сынып · '+lvlOf(xpOf(ME)).name],parent:['Айдананың ата-анасы','1 бала'],teacher:['Алпа ағай','Физика мұғалімі']}[v];
+ const newApps=S.apps.filter(a=>a.st==='new').length,newHw=S.hw.filter(x=>x.st==='new').length,toCheck=S.hw.filter(x=>x.st==='submitted').length;
+ const cnt={student:{hw:newHw},teacher:{apps:newApps,hw:toCheck}}[v]||{};
+ const body={student:{home:sHome,topics:sTopics,hw:sHw,test:sTest,rating:vRating,badges:sBadges},parent:{overview:pOver,topics:pTopics,hw:pHw,ai:pAi},teacher:{tree:tTree,hw:tHw,students:tStudents,rating:vRating,apps:tApps,game:tGame,sched:tSched}}[v][S.tab]();
+ return `<div class="cab"><aside class="side">
+  <a class="brand" onclick="go('landing')">${logo(30)}<span>Alpa<b>Physics</b></span></a>
+  <div class="who">${av(who[0])}<div><b>${esc(who[0])}</b><span class="tiny">${who[1]}</span></div></div>
+  ${tabs.map(t=>`<button class="it ${S.tab===t[0]?'on':''}" onclick="tab('${t[0]}')">${ic(t[2])}<span>${t[1]}</span>${cnt[t[0]]?`<span class="cnt">${cnt[t[0]]}</span>`:''}</button>`).join('')}
+  <div class="sp"></div>
+  <button class="it" onclick="roleSwitch()">${ic('users')}<span>Рөлді ауыстыру</span></button>
+  <button class="it" onclick="go('landing')">${ic('logout')}<span>Шығу</span></button>
+ </aside><main class="main">${body}</main></div>`}
+function roleSwitch(){openModal(`<h3>Демо: рөлді ауыстыру</h3><p class="muted small">Бір прототипте үш кабинет бар</p><div style="display:grid;gap:10px;margin-top:16px">
+ ${[['student','Оқушы кабинеті','Тақырыптар, үй жұмысы, тест, рейтинг','#4f46e5'],['parent','Ата-ана кабинеті','Форма, прогресс, AI-есеп','#db2777'],['teacher','Мұғалім кабинеті (Алпа)','Тақырыптар ағашы, материалдар, оқушылар','#059669'],['landing','Басты сайт','Лендинг','#0f1230']].map(r=>`<button class="list-it" style="text-align:left" onclick="go('${r[0]}')"><div class="ti" style="background:${r[3]};color:#fff">${ic('chev')}</div><div><b>${r[1]}</b><div class="tiny muted">${r[2]}</div></div></button>`).join('')}</div>`)}
+const head=(t,sub,right='')=>`<div class="mhead"><div><h1>${t}</h1>${sub?`<div class="muted small mt8" style="margin-top:2px">${sub}</div>`:''}</div><div class="row wrapf">${right}</div></div>`;
+const xpPills=()=>`<span class="xp">${ic('flame','color:#f97316')} 12 күн</span><span class="xp">${ic('star','color:#f59e0b')} ${xpOf(ME).toLocaleString('ru')} XP</span><span class="xp">${ic('trophy','color:#db2777')} #${myRank()}</span>`;
+
+/* ================= student ================= */
+function sHome(){
+ const x=xpOf(ME),L=lvlOf(x),pr=L.next?Math.round((x-L.prev)/(L.next-L.prev)*100):100;
+ const lv=leaves(S.tree,[],[],true).map(l=>({...l,v:sc(ME,l.id)})).filter(l=>l.v!=null);
+ const weak=[...lv].sort((a,b)=>a.v-b.v)[0];
+ const newHw=S.hw.filter(w=>w.st==='new');
+ const wk=ranked('all','week'),wr=wk.findIndex(s=>s.me)+1;
+ return head('Сәлем, Айдана! 👋','Бүгін — 10 қазан, сенбі. Бүгінгі мақсат: 1 үй жұмысы + 1 тест',xpPills())+`
+ <div class="g2" style="grid-template-columns:1.4fr 1fr">
+  <div class="card hello"><div class="row between"><div><div class="small" style="opacity:.75">Сенің деңгейің</div><h2 style="font-size:28px;margin-top:4px">${L.name}</h2></div><div style="font-size:46px">${['🌱','🔭','🧪','🍎','🌌'][L.i]}</div></div>
+   <div class="row between small mt16"><span>${x.toLocaleString('ru')} XP</span><span style="opacity:.75">${L.next?`«${L.nextName}» деңгейіне дейін ${(L.next-x).toLocaleString('ru')} XP`:'Ең жоғары деңгей!'}</span></div><div class="bar mt8"><i style="width:${pr}%"></i></div>
+   <div class="row wrapf mt16"><button class="btn btn-a btn-s" onclick="tab('test')">${ic('bolt')} Тест тапсыру +40 XP</button><button class="btn btn-w btn-s" onclick="tab('badges')">Жетістіктер</button></div></div>
+  <div class="card"><div class="row between"><b>Апталық лига</b><span class="tag warn">3 күн қалды</span></div>
+   <div class="num" style="font-size:34px;font-weight:800;margin-top:8px">#${wr} <span class="small muted" style="font-family:Inter;font-weight:500">/ ${wk.length}</span></div>
+   <p class="small muted">Топ-3-ке шығу үшін тағы ${Math.max(0,wk[2].v-wk[wr-1].v+1)} XP керек</p>
+   <div class="mt12">${wk.slice(0,3).map((s,i)=>`<div class="row small" style="padding:4px 0"><span class="rank r${i+1}" style="width:24px;height:24px">${i+1}</span>${esc(s.n)}<b style="margin-left:auto">${s.v}</b></div>`).join('')}</div></div>
+ </div>
+ <div class="g3 mt16">
+  <div class="card"><div class="row between"><b>Үй жұмысы</b><a class="small" style="color:var(--pri)" onclick="tab('hw')">Барлығы →</a></div><div class="mt12">
+   ${newHw.length?newHw.slice(0,3).map(w=>`<div class="list-it"><div class="ti" style="background:#eef0ff;color:var(--pri)">${ic('hw')}</div><div style="flex:1;min-width:0"><b class="small">${esc(w.t)}</b><div class="tiny muted">Мерзімі: ${fmtD(w.due)} · +${w.xp} XP</div></div><button class="btn btn-p btn-s" onclick="submitHw(${w.id})">Тапсыру</button></div>`).join(''):'<p class="muted small">Жаңа тапсырма жоқ 🎉</p>'}</div></div>
+  <div class="card"><b>Келесі сабақ</b><div class="list-it mt12" style="background:#f5f3ff;border-color:#ddd6fe"><div class="ti" style="background:#7c3aed;color:#fff">${ic('cal')}</div><div><b class="small">Сәрсенбі, 14.10 · 18:00</b><div class="tiny muted">Электромагниттік индукция</div></div></div>
+   <div class="row wrapf mt12"><button class="btn btn-p btn-s" onclick="toast('Zoom сілтемесі сабақтан 10 минут бұрын ашылады')">Сабаққа қосылу</button><button class="btn btn-g btn-s" onclick="S.selTopic='emi';S.open.el=1;tab('topics')">Алдын ала оқу</button></div></div>
+  <div class="card" style="border-color:#fde68a;background:#fffbeb"><b>💡 Ағайдың ұсынысы</b><p class="small mt8">Ең әлсіз тақырыбың — <b>${esc(weak.t)}</b> (${weak.v}%). 10 есеп шығарсаң, ағаштағы бұл тармақ жасылға айналады.</p><button class="btn btn-a btn-s mt12" onclick="S.selTopic='${weak.id}';S.open['${S.tree.find(n=>n.t===weak.root)?.id}']=1;tab('topics')">Тақырыпқа өту +60 XP</button></div>
+ </div>
+ <div class="card mt16"><div class="row between"><b>Бөлімдер бойынша прогресс</b><a class="small" style="color:var(--pri)" onclick="tab('topics')">Ағашты ашу →</a></div>
+  <div class="g2 mt12" style="gap:14px 32px">${S.tree.filter(n=>!n.hidden).map(n=>{const v=nodeAvg(ME,n);return `<div><div class="row between small"><span>${esc(n.t)}</span><b>${v??'—'}${v!=null?'%':''}</b></div><div class="bar ${clr(v)} mt8"><i style="width:${v||0}%"></i></div></div>`}).join('')}</div></div>`}
+
+function treeHtml(nodes,mode){return nodes.filter(n=>mode!=='student'||!n.hidden).map(n=>{const kids=n.c&&n.c.length;const v=mode==='parent'||mode==='student'?(kids?nodeAvg(ME,n):sc(ME,n.id)):null;const open=S.open[n.id];
+ return `<div class="node ${open?'open':''}"><div class="nrow ${!kids&&S.selTopic===n.id?'sel':''}" onclick="${kids?`toggleNode('${n.id}')`:`pickTopic('${n.id}')`}">${kids?`<span class="chev">${ic('chev')}</span>`:`<span style="width:18px;display:grid;place-items:center"><i style="width:8px;height:8px;border-radius:50%;background:${v==null?'#cbd0e0':v>=80?'#10b981':v>=60?'#4f46e5':v>=50?'#f59e0b':'#ef4444'}"></i></span>`}<span style="font-weight:${kids?600:500};font-size:14px">${esc(n.t)}</span>${n.g?`<span class="tag gray">${esc(n.g)}</span>`:''}<span class="pct" style="color:${v==null?'#9aa0b8':v>=80?'#047857':v<50?'#b91c1c':'inherit'}">${v==null?'—':v+'%'}</span></div>${kids&&open?`<div class="kids">${treeHtml(n.c,mode)}</div>`:''}</div>`}).join('')}
+function toggleNode(id){S.open[id]=!S.open[id];render()}
+function pickTopic(id){S.selTopic=id;render()}
+const MI={video:['play','#ef4444','#fee2e2','Көру'],pdf:['file','#2563eb','#dbeafe','Ашу'],tasks:['list','#059669','#d1fae5','Шығару'],test:['bolt','#7c3aed','#ede9fe','Бастау'],link:['link','#0891b2','#cffafe','Ашу'],file:['file','#6b7190','#eef0f4','Жүктеу']};
+function sTopics(){
+ const r=find(S.selTopic),n=r&&!(r.n.c&&r.n.c.length)?r.n:null;
+ const lf=leaves(S.tree,[],[],true).find(l=>l.id===S.selTopic);
+ let det='<div class="card muted">Сол жақтағы ағаштан тақырыпты таңдаңыз</div>';
+ if(n){const v=sc(ME,n.id),tr=ranked(n.id,'all'),mr=tr.findIndex(s=>s.me)+1;
+  det=`<div class="card"><div class="small muted">${lf?esc(lf.path.join(' › ')):''}</div><h2 style="font-size:24px;margin-top:6px">${esc(n.t)}</h2>
+   <div class="row wrapf mt12"><span class="tag ${clr(v)}">${v==null?'Әлі басталмаған':'Меңгеру: '+v+'%'}</span>${mr?`<span class="tag">Тақырып рейтингі: #${mr} / ${tr.length}</span>`:''}<span class="tag gray">+${S.game.test} XP тест үшін</span></div>
+   <div class="bar ${clr(v)} mt16"><i style="width:${v||0}%"></i></div>
+   ${n.desc?`<p class="mt16">${esc(n.desc)}</p>`:''}
+   <h3 style="font-size:16px;margin-top:22px">Материалдар</h3><div class="mt12">${(n.m||[]).map(m=>{const t=MI[m.type]||MI.file;return `<div class="list-it"><div class="ti" style="background:${t[2]};color:${t[1]}">${ic(t[0])}</div><div style="flex:1;min-width:0"><b class="small">${esc(m.name)}</b><div class="tiny muted">${{video:'Бейнесабақ',pdf:'Конспект',tasks:'Есептер',test:'Тест',link:'Сілтеме',file:'Файл'}[m.type]||'Файл'}</div></div><button class="btn btn-g btn-s" onclick="${m.type==='test'?`startTest('${n.id}')`:`toast('«${esc(m.name).replace(/'/g,'')}» ашылды (демо)')`}">${t[3]}</button></div>`}).join('')||'<p class="muted small">Ағай әлі материал жүктемеген</p>'}</div>
+   <div class="row wrapf mt16"><button class="btn btn-p" onclick="startTest('${n.id}')">${ic('bolt')} Тақырып тестін бастау</button><button class="btn btn-g" onclick="S.rScope='${n.id}';tab('rating')">${ic('trophy')} Тақырып рейтингі</button><button class="btn btn-g" onclick="askTeacher('${esc(n.t).replace(/'/g,'')}')">Ағайдан сұрау</button></div></div>
+   <div class="card mt16"><b>Тақырып көшбасшылары</b><div class="mt8">${tr.slice(0,5).map((s,i)=>`<div class="lb-row" style="padding:8px 0"><span class="rank ${i<3?'r'+(i+1):''}">${i+1}</span>${av(s.n,30)}<span class="small" style="flex:1;font-weight:${s.me?700:500}">${esc(s.n)}${s.me?' (сен)':''}</span><b class="small">${s.v}%</b></div>`).join('')}</div></div>`}
+ return head('Тақырыптар ағашы','Алпа ағайдың авторлық құрылымы · түс = меңгеру деңгейі',`<span class="tag ok">● 80%+</span><span class="tag">● 60–79</span><span class="tag warn">● 50–59</span><span class="tag bad">● &lt;50</span>`)+
+ `<div class="split"><div class="card sticky tree" style="padding:12px">${treeHtml(S.tree,'student')}</div><div>${det}</div></div>`}
+function askTeacher(t){openModal(`<h3>Ағайдан сұрау</h3><p class="muted small">Тақырып: ${t}</p><label>Сұрағың</label><textarea rows="4" placeholder="Мысалы: 5-есепте неге үйкеліс күші теріс таңбамен алынады?"></textarea><label>Фото / файл (міндетті емес)</label><input type="file"><button class="btn btn-p mt16" style="width:100%" onclick="closeModal();toast('Сұрақ Алпа ағайға жіберілді')">Жіберу</button>`)}
+
+function sHw(){
+ const f=S.hwF,L=S.hw.filter(w=>f==='all'||w.st===f);
+ const st={new:['Жаңа',''],submitted:['Тексерілуде','warn'],checked:['Тексерілді','ok']};
+ return head('Үй жұмысы','Мерзімінде тапсырсаң — қосымша +10 XP',xpPills())+
+ `<div class="chips">${[['all','Барлығы'],['new','Жаңа'],['submitted','Тексерілуде'],['checked','Тексерілді']].map(c=>`<button class="chip ${f===c[0]?'on':''}" onclick="S.hwF='${c[0]}';render()">${c[1]} · ${c[0]==='all'?S.hw.length:S.hw.filter(w=>w.st===c[0]).length}</button>`).join('')}</div>
+ <div class="mt16">${L.map(w=>`<div class="list-it" style="padding:16px"><div class="ti" style="background:#eef0ff;color:var(--pri)">${ic('hw')}</div><div style="flex:1;min-width:0"><div class="row wrapf"><b>${esc(w.t)}</b><span class="tag ${st[w.st][1]}">${st[w.st][0]}</span></div><div class="small muted mt8" style="margin-top:3px">${esc(tname(w.topic))} · мерзімі ${fmtD(w.due)} · +${w.xp} XP</div></div>
+  ${w.st==='new'?`<button class="btn btn-p btn-s" onclick="submitHw(${w.id})">${ic('upload')} Тапсыру</button>`:w.st==='checked'?`<div style="text-align:right"><div class="num" style="font-weight:800;font-size:22px;color:${w.score>=80?'#047857':'#92400e'}">${w.score}</div><a class="tiny" style="color:var(--pri)" onclick="hwComment(${w.id})">Ағай пікірі</a></div>`:`<span class="small muted">Ағай тексеріп жатыр</span>`}</div>`).join('')||'<p class="muted">Бұл санатта тапсырма жоқ</p>'}</div>`}
+function submitHw(id){const w=S.hw.find(x=>x.id===id);openModal(`<h3>${esc(w.t)}</h3><p class="muted small">${esc(tname(w.topic))} · мерзімі ${fmtD(w.due)}</p>
+ <div class="drop mt16" onclick="this.querySelector('input').click()">${ic('upload','width:28px;height:28px')}<div class="mt8"><b>Дәптердің фотосын немесе файлды жүкте</b></div><div class="tiny">JPG, PNG, PDF</div><input type="file" multiple hidden onchange="this.parentNode.querySelector('b').textContent=this.files.length+' файл таңдалды'"></div>
+ <label>Түсініктеме</label><textarea rows="3" placeholder="Ағайға хабарлама (міндетті емес)"></textarea>
+ <button class="btn btn-p mt16" style="width:100%" onclick="doSubmit(${id})">Тапсыру · +${w.xp} XP</button>`)}
+function doSubmit(id){const w=S.hw.find(x=>x.id===id);w.st='submitted';S.xpb+=w.xp;save();closeModal();render();toast(`🎉 Тапсырылды! +${w.xp} XP`)}
+function hwComment(id){const w=S.hw.find(x=>x.id===id);openModal(`<h3>Ағай пікірі</h3><p class="muted small">${esc(w.t)} · балл ${w.score}</p><div class="msg ai mt16" style="max-width:100%">${esc(w.cm||'Жарайсың!')}</div><button class="btn btn-g mt16" onclick="closeModal()">Түсінікті</button>`)}
+
+function startTest(tid){S.test={i:0,pick:null,ok:0,done:false,topic:tid||null};if(S.view!=='student')S.view='student';tab('test')}
+function sTest(){const T=S.test,q=QS[T.i];
+ const title=T.topic?'Тақырып тесті: '+tname(T.topic):'ҰБТ форматындағы мини-сынақ';
+ if(T.done){const p=Math.round(T.ok/QS.length*100),xp=T.ok*10;return head(title,'',xpPills())+`<div class="card" style="text-align:center;max-width:620px;margin:0 auto;padding:36px">
+  <div style="font-size:56px">${p>=80?'🏆':p>=50?'💪':'📘'}</div><h2 style="font-size:28px;margin-top:8px">${T.ok} / ${QS.length} дұрыс</h2><p class="muted mt8">${p>=80?'Керемет нәтиже! Рейтингте жоғарыладың.':p>=50?'Жақсы! Қателерді талдап шық.':'Тақырыпты қайталап, қайта тапсырып көр.'}</p>
+  <div class="row wrapf mt16" style="justify-content:center"><span class="tag ok">+${xp} XP</span><span class="tag">ҰБТ эквиваленті ≈ ${Math.round(p/2)}/50</span></div>
+  <div class="row wrapf mt24" style="justify-content:center"><button class="btn btn-p" onclick="startTest(S.test.topic)">Қайта тапсыру</button><button class="btn btn-g" onclick="tab('rating')">Рейтингті көру</button></div></div>`}
+ return head(title,`${T.i+1}-сұрақ / ${QS.length} · әр дұрыс жауап +10 XP`,`<span class="xp">${ic('check','color:#10b981')} ${T.ok} дұрыс</span>`)+`<div style="max-width:720px">
+ <div class="bar"><i style="width:${T.i/QS.length*100}%"></i></div>
+ <div class="card mt16"><span class="tag gray">Сұрақ ${T.i+1}</span><h3 style="font-size:19px;margin:14px 0 18px;line-height:1.4">${q.q}</h3>
+  <div style="display:grid;gap:10px">${q.o.map((o,k)=>{let c='';if(T.pick!=null){if(k===q.a)c='right';else if(k===T.pick)c='wrong'}return `<button class="opt ${c}" ${T.pick!=null?'disabled':''} onclick="pick(${k})"><span class="l">${'ABCD'[k]}</span>${o}</button>`}).join('')}</div>
+  ${T.pick!=null?`<div class="msg ai mt16" style="max-width:100%;background:${T.pick===q.a?'#ecfdf5':'#fef2f2'}"><b>${T.pick===q.a?'✅ Дұрыс!':'❌ Қате.'}</b> ${q.e}</div><button class="btn btn-p mt16" onclick="nextQ()">${T.i+1<QS.length?'Келесі сұрақ':'Нәтижені көру'} ${ic('chev')}</button>`:`<div class="row mt16"><button class="btn btn-g btn-s" onclick="toast('Кеңес: формулалар парағын қара (демо)')">💡 Кеңес (−5 XP)</button></div>`}
+ </div></div>`}
+function pick(k){const T=S.test;T.pick=k;if(k===QS[T.i].a)T.ok++;render()}
+function nextQ(){const T=S.test;if(T.i+1<QS.length){T.i++;T.pick=null}else{T.done=true;S.xpb+=T.ok*10;save()}render()}
+
+function vRating(){
+ const scope=S.rScope,per=S.rPeriod,grp=S.rGroup,R=ranked(scope,per,grp),isT=scope!=='all';
+ const unit=isT?'%':'XP';const p3=R.slice(0,3);
+ const opts=leaves(S.tree,[],[],S.view!=='teacher');
+ const pod=p3.length===3?`<div class="podium mt16">${[1,0,2].map(i=>{const s=p3[i];return `<div class="pod" style="background:${['linear-gradient(160deg,#f59e0b,#d97706)','linear-gradient(160deg,#94a3b8,#64748b)','linear-gradient(160deg,#fb923c,#c2410c)'][i]};padding-top:${[34,20,14][i]}px">${av(s.n)}<b style="font-size:14px">${esc(s.n)}</b><div class="num" style="font-size:20px;font-weight:800">${s.v.toLocaleString('ru')} ${unit}</div><div class="tiny" style="opacity:.85">${i+1}-орын</div></div>`}).join('')}</div>`:'';
+ return head('Рейтинг',isT?'Тақырып бойынша: '+esc(tname(scope)):'Жалпы рейтинг · XP бойынша',S.view==='student'?xpPills():'')+`
+ <div class="card"><div class="g3" style="gap:12px">
+  <div><label style="margin-top:0">Тақырып</label><select onchange="S.rScope=this.value;render()"><option value="all">Жалпы рейтинг (барлық тақырып)</option>${S.tree.map(sec=>`<optgroup label="${esc(sec.t)}">${leaves([sec]).map(l=>`<option value="${l.id}" ${l.id===scope?'selected':''}>${esc(l.t)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+  <div><label style="margin-top:0">Кезең</label><div class="chips">${[['week','Апта'],['month','Ай'],['all','Барлық уақыт']].map(c=>`<button class="chip ${per===c[0]?'on':''}" ${isT?'disabled style="opacity:.4"':''} onclick="S.rPeriod='${c[0]}';render()">${c[1]}</button>`).join('')}</div></div>
+  <div><label style="margin-top:0">Топ</label><select onchange="S.rGroup=this.value;render()">${['all','11 · ҰБТ тобы','9–10 топ','7–8 топ'].map(g=>`<option value="${g}" ${g===grp?'selected':''}>${g==='all'?'Барлық топтар':g}</option>`).join('')}</select></div>
+ </div></div>
+ ${pod}
+ <div class="card mt16 tscroll" style="padding:6px 8px"><table class="t"><thead><tr><th>#</th><th>Оқушы</th><th>Сынып</th><th>${isT?'Меңгеру':'Деңгей'}</th><th style="text-align:right">${unit}</th></tr></thead><tbody>
+ ${R.map((s,i)=>`<tr class="${s.me&&S.view==='student'?'me':''}"><td><span class="rank ${i<3?'r'+(i+1):''}">${i+1}</span></td><td><div class="row">${av(s.n,30)}<b class="small">${esc(s.n)}${s.me&&S.view==='student'?' (сен)':''}</b></div></td><td class="small">${s.gr}</td><td>${isT?`<div class="bar ${clr(s.v)}" style="width:110px"><i style="width:${s.v}%"></i></div>`:`<span class="tag gray">${lvlOf(xpOf(s)).name}</span>`}</td><td style="text-align:right"><b>${s.v.toLocaleString('ru')}</b></td></tr>`).join('')}
+ </tbody></table></div>`}
+
+function sBadges(){const got=BADGES.filter(b=>b[3]).length;return head('Жетістіктер',`${got} / ${BADGES.length} белгі ашылды`,xpPills())+
+ `<div class="g4">${BADGES.map(b=>`<div class="card badge ${b[3]?'':'locked'}" onclick="toast('${b[3]?'Ашылған белгі: ':'Ашу үшін: '}${b[2]}')" style="cursor:pointer"><div class="bi" style="background:${b[3]?'#fef3c7':'#eef0f4'}">${b[0]}</div><b>${b[1]}</b><div class="tiny muted mt8">${b[2]}</div>${b[3]?'':`<div class="tiny mt8" style="color:var(--muted)">${ic('lock','width:12px;height:12px;vertical-align:-2px')} жабық</div>`}</div>`).join('')}</div>
+ <div class="card mt16"><b>Деңгейлер жолы</b><div class="row wrapf mt16" style="gap:8px">${LEVELS.map((l,i)=>{const cur=lvlOf(xpOf(ME)).i;return `<div class="chip ${i===cur?'on':''}" style="${i<cur?'background:#d1fae5;border-color:#a7f3d0':''}">${['🌱','🔭','🧪','🍎','🌌'][i]} ${l[1]} · ${l[0]} XP</div>${i<LEVELS.length-1?ic('chev','color:#9aa0b8'):''}`}).join('')}</div></div>`}
+
+/* ================= parent ================= */
+function pOver(){
+ const cur=Math.round(WEEKS.slice(-4).reduce((a,b)=>a+b)/4),all=Math.round(WEEKS.reduce((a,b)=>a+b)/WEEKS.length);
+ const lbl=['21.07','28.07','04.08','11.08','18.08','25.08','01.09','08.09','15.09','22.09','29.09','06.10'];
+ const att=[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1];
+ const done=S.hw.filter(w=>w.st!=='new').length;
+ return head('Айдананың прогресі','11-сынып · 11 · ҰБТ тобы · соңғы жаңарту: бүгін 09:12',`<button class="btn btn-g btn-s" onclick="toast('PDF-есеп жүктелді (демо)')">${ic('file')} PDF-есеп</button><button class="btn btn-p btn-s" onclick="tab('ai');aiAsk('report')">${ic('spark')} AI-есеп</button>`)+`
+ <div class="g4">
+  <div class="card">${ring(cur,100,'#4f46e5',cur+'%','Қазіргі форма')}<div class="tiny muted" style="text-align:center">соңғы 4 апта</div></div>
+  <div class="card">${ring(all,100,'#a78bfa',all+'%','Жалпы деңгей')}<div class="tiny muted" style="text-align:center">оқу басталғаннан бері</div></div>
+  <div class="card">${ring(41,50,'#f59e0b','41','ҰБТ болжамы')}<div class="tiny muted" style="text-align:center">50 балдан · физика</div></div>
+  <div class="card">${ring(15,16,'#10b981','94%','Қатысу')}<div class="tiny muted" style="text-align:center">16 сабақтың 15-і</div></div>
+ </div>
+ <div class="card mt16"><div class="row between wrapf"><div><b>Апталық тест нәтижелері</b><div class="tiny muted">Қазіргі форма жалпы деңгейден <b style="color:#047857">+${cur-all} п.т.</b> жоғары — тұрақты өсу</div></div><span class="tag ok">▲ ${WEEKS.at(-1)-WEEKS[0]} п.т. 12 аптада</span></div>
+  <div class="mt12">${lineChart(WEEKS,{labels:lbl.map((l,i)=>i%2?'':l)})}</div></div>
+ <div class="g2 mt16">
+  <div class="card"><b>Бөлімдер: қазір vs жалпы</b><div class="row small mt8" style="gap:16px"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#4f46e5"></i> қазіргі форма</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#c4b5fd"></i> жалпы</span></div>
+   <div class="mt12" style="display:grid;gap:12px">${S.tree.filter(n=>n.id!=='g56').map(n=>{const c=nodeAvg(ME,n)||0,o=Math.max(20,c-Math.round(h(n.id)*12));return `<div><div class="row between small"><span>${esc(n.t)}</span><b>${c}%</b></div><div class="bar mt8" style="height:7px"><i style="width:${c}%"></i></div><div class="bar mt8" style="height:5px;margin-top:3px"><i style="width:${o}%;background:#c4b5fd"></i></div></div>`}).join('')}</div></div>
+  <div><div class="card"><div class="row between"><b>Сабаққа қатысу</b><span class="small muted">соңғы 16</span></div><div class="row wrapf mt12" style="gap:6px">${att.map((a,i)=>`<span title="${a?'Қатысты':'Қатыспады'}" style="width:26px;height:26px;border-radius:8px;background:${a?'#d1fae5':'#fee2e2'};display:grid;place-items:center;font-size:12px">${a?'✓':'✕'}</span>`).join('')}</div></div>
+   <div class="card mt16"><div class="row between"><b>Үй жұмысы</b><a class="small" style="color:var(--pri)" onclick="tab('hw')">Толығырақ →</a></div><div class="num" style="font-size:28px;font-weight:800;margin-top:6px">${done} / ${S.hw.length}</div><div class="bar ok mt8"><i style="width:${done/S.hw.length*100}%"></i></div><p class="tiny muted mt8">Орташа балл: 83 · кешіккен жоқ</p></div>
+   <div class="card mt16" style="background:linear-gradient(135deg,#eef0ff,#fdf2f8)"><div class="row">${ic('spark','color:#7c3aed')}<b>AI қысқаша қорытынды</b></div><p class="small mt8">Айдана жақсы қарқынмен келеді. Механика — күшті жағы. Электромагниттік индукция мен толқындық оптикаға көңіл бөлу керек.</p><button class="btn btn-p btn-s mt12" onclick="tab('ai');aiAsk('report')">Толық есепті сұрау</button></div></div>
+ </div>`}
+function pTopics(){const L=leaves(S.tree,[],[],true).map(l=>({...l,v:sc(ME,l.id)}));const f=S.ptF;const show=L.filter(l=>f==='all'||(f==='weak'&&l.v!=null&&l.v<60)||(f==='strong'&&l.v>=80));
+ return head('Тақырыптар бойынша','Алпа ағайдың тақырыптар ағашы · баланың меңгеру деңгейі')+`<div class="chips">${[['all','Барлығы'],['weak','Әлсіздер (<60%)'],['strong','Күштілер (80%+)']].map(c=>`<button class="chip ${f===c[0]?'on':''}" onclick="S.ptF='${c[0]}';render()">${c[1]}</button>`).join('')}</div>
+ <div class="split mt16"><div class="card tree" style="padding:12px">${treeHtml(S.tree,'parent')}</div><div class="card"><b>${f==='weak'?'Назар аудару керек':f==='strong'?'Күшті тақырыптар':'Барлық тақырыптар'}</b><div class="mt12" style="display:grid;gap:12px">${show.map(l=>`<div><div class="row between small"><span>${esc(l.t)} <span class="muted tiny">· ${esc(l.root)}</span></span><b>${l.v==null?'—':l.v+'%'}</b></div><div class="bar ${clr(l.v)} mt8"><i style="width:${l.v||0}%"></i></div></div>`).join('')||'<p class="muted small">Тізім бос</p>'}</div></div></div>`}
+function pHw(){const st={new:['Жаңа',''],submitted:['Тексерілуде','warn'],checked:['Тексерілді','ok']};return head('Үй жұмысы','Айдананың тапсырмалары')+
+ `<div class="card tscroll" style="padding:6px 8px"><table class="t"><thead><tr><th>Тапсырма</th><th>Тақырып</th><th>Мерзімі</th><th>Күйі</th><th style="text-align:right">Балл</th></tr></thead><tbody>${S.hw.map(w=>`<tr><td><b class="small">${esc(w.t)}</b></td><td class="small">${esc(tname(w.topic))}</td><td class="small">${fmtD(w.due)}</td><td><span class="tag ${st[w.st][1]}">${st[w.st][0]}</span></td><td style="text-align:right"><b>${w.score??'—'}</b></td></tr>`).join('')}</tbody></table></div>
+ <div class="card mt16 row between wrapf"><div><b>Ағаймен байланыс</b><div class="small muted">Сұрағыңыз болса, Алпа ағайға тікелей жазыңыз</div></div><div class="row"><button class="btn btn-g btn-s" onclick="toast('WhatsApp ашылады (демо)')">${ic('phone')} WhatsApp</button><button class="btn btn-p btn-s" onclick="askTeacher('Ата-ана сұрағы')">Хабарлама</button></div></div>`}
+
+function aiText(kind){
+ const L=leaves(S.tree,[],[],true).map(l=>({...l,v:sc(ME,l.id)})).filter(l=>l.v!=null&&l.root!==S.tree[0].t);
+ const weak=[...L].sort((a,b)=>a.v-b.v).slice(0,3),strong=[...L].sort((a,b)=>b.v-a.v).slice(0,3);
+ const done=S.hw.filter(w=>w.st!=='new').length;
+ const T={
+  report:`<b>Айдананың апталық есебі · 04–10 қазан</b><br><br>📈 <b>Қазіргі форма: 77%</b> — жалпы деңгейден (69%) 8 пайыздық тармаққа жоғары. Соңғы 4 аптада өсу тұрақты.<br>📝 <b>Үй жұмысы:</b> ${done}/${S.hw.length} тапсырылды, орташа балл 83, кешіккен жоқ.<br>🎯 <b>Қатысу:</b> 16 сабақтың 15-і.<br>💪 <b>Күшті жақтары:</b> ${strong.map(s=>`${s.t} (${s.v}%)`).join(', ')}.<br>⚠️ <b>Назар аудару керек:</b> ${weak.map(s=>`${s.t} (${s.v}%)`).join(', ')}.<br>🏆 <b>Рейтинг:</b> жалпы #${myRank()} / ${STU.length}.<br><br><b>Ұсыныс:</b> аптасына 2 рет 20 минуттан «${weak[0].t}» бойынша есеп шығару. Алпа ағай 14.10 сабағында осы тақырыпты қайталайды.`,
+  weak:`Қазір ең әлсіз үш тақырып:<br><br>${weak.map((s,i)=>`${i+1}. <b>${s.t}</b> — ${s.v}% (${s.root})`).join('<br>')}<br><br>Бұлар ҰБТ-да жиі кездеседі: электродинамика мен оптика бойынша сұрақтар — шамамен әр бесінші тапсырма. Әр тақырыпта бейнесабақ пен 20 есептік жинақ бар — күніне 3–4 есеп жеткілікті.`,
+  forecast:`<b>ҰБТ болжамы: 41 / 50</b><br><br>Соңғы 4 сынақ: 36 → 38 → 40 → 41. Қазіргі қарқынмен (айына ≈ +2 балл) мамырға қарай <b>45–47 балл</b> күтуге болады.<br><br>Болжамды көтерудің ең тез жолы — электромагниттік индукция мен толқындық оптиканы 70%-ға жеткізу: бұл шамамен +3 балл.<br><span class="tiny muted">Болжам — бағыт көрсеткіш, кепілдік емес.</span>`,
+  help:`Үйде қалай көмектесуге болады:<br><br>1. <b>Тұрақты уақыт.</b> Күн сайын 30–40 минут физикаға (мысалы, 19:00–19:40). Айдананың 12 күндік сериясы бар — оны үзбеу маңызды.<br>2. <b>Мақтау.</b> Рейтингте апта сайын көтерілуін байқап, атап өтіңіз.<br>3. <b>Түсіндіріп беруін сұраңыз.</b> «Индукция деген не?» деп сұрасаңыз, өзі түсіндіріп бергенде материал жақсырақ бекиді.<br><br>Қажет болса, Алпа ағаймен 10 минуттық қоңырау ұйымдастыра аламын.`};
+ return T[kind]}
+function initChat(){if(!S.chat)S.chat=[{w:'ai',t:'Сәлеметсіз бе! Мен — Alpa Physics AI-көмекшісімін. Айдананың сабақтағы деректерін (тесттер, үй жұмысы, қатысу, тақырыптар ағашы) талдап, түсінікті тілмен есеп беремін. Не білгіңіз келеді?'}]}
+function pAi(){initChat();return head('AI-көмекші','Баланың оқу деректеріне негізделген жауаптар',`<span class="tag">${ic('spark','width:13px;height:13px')} демо-жауаптар</span>`)+`
+ <div class="card" style="padding:14px"><div class="chat" id="chat">${S.chat.map(m=>`<div class="msg ${m.w}">${m.typing?'<span class="dots"><span></span><span></span><span></span></span>':m.t}</div>`).join('')}</div>
+ <div class="chips mt12">${[['report','📋 Апталық есеп'],['weak','⚠️ Әлсіз тақырыптар'],['forecast','🎯 ҰБТ болжамы'],['help','🏠 Үйде қалай көмектесем?']].map(b=>`<button class="chip" onclick="aiAsk('${b[0]}')">${b[1]}</button>`).join('')}</div>
+ <div class="row mt12"><input id="aiq" placeholder="Сұрағыңызды жазыңыз…" onkeydown="if(event.key==='Enter')aiFree()"><button class="btn btn-p" onclick="aiFree()">${ic('send')}</button></div></div>`}
+function aiPush(q,ans){initChat();S.chat.push({w:'me',t:esc(q)});S.chat.push({w:'ai',typing:true});render();setTimeout(()=>{S.chat.pop();S.chat.push({w:'ai',t:ans});if(S.view==='parent'&&S.tab==='ai')render()},900)}
+function aiAsk(k){const q={report:'Апталық есеп беріңізші',weak:'Қай тақырыптар әлсіз?',forecast:'ҰБТ-да қанша балл алады?',help:'Үйде қалай көмектесе аламын?'}[k];aiPush(q,aiText(k))}
+function aiFree(){const v=$('#aiq').value.trim();if(!v)return;const l=v.toLowerCase();
+ const k=/есеп|отч|апта/.test(l)?'report':/әлсіз|слаб|қиын/.test(l)?'weak':/ұбт|ент|балл/.test(l)?'forecast':/көмек|помоч|үйде/.test(l)?'help':null;
+ aiPush(v,k?aiText(k):`Сұрағыңызды түсіндім. Айдананың деректері бойынша: қазіргі форма 77%, рейтингте #${myRank()}, соңғы тест 82%. Нақтырақ жауап үшін төмендегі батырмалардың бірін таңдаңыз немесе сұрақты Алпа ағайға жіберейін бе?`)}
+
+/* ================= teacher ================= */
+function editNode(n,d){const kids=n.c&&n.c.length;return `<div class="en" style="--d:${d}"><div class="en-row ${S.selEdit===n.id?'sel':''}" onclick="selEdit('${n.id}')">
+ <span style="color:${kids?'var(--pri)':'#9aa0b8'}">${ic(kids?'tree':'file','width:16px;height:16px')}</span><span class="en-t">${esc(n.t)}</span>
+ <span class="tag gray">${kids?leaves([n]).length+' тақ.':(n.m||[]).length+' мат.'}</span>${n.hidden?'<span class="tag warn">жасырын</span>':''}
+ <span class="en-act" onclick="event.stopPropagation()"><button class="btn-i" title="Ішкі тақырып қосу" onclick="addChild('${n.id}')">${ic('plus','width:15px;height:15px')}</button><button class="btn-i" title="Атын өзгерту" onclick="renameNode('${n.id}')">${ic('edit','width:15px;height:15px')}</button><button class="btn-i" title="Жоғары" onclick="moveNode('${n.id}',-1)">${ic('up','width:15px;height:15px')}</button><button class="btn-i" title="Төмен" onclick="moveNode('${n.id}',1)">${ic('down','width:15px;height:15px')}</button><button class="btn-i" title="Жою" onclick="delNode('${n.id}')">${ic('trash','width:15px;height:15px')}</button></span>
+ </div>${kids?n.c.map(k=>editNode(k,d+1)).join(''):''}</div>`}
+function selEdit(id){S.selEdit=id;render()}
+function addChild(id){const t=prompt('Жаңа тақырып атауы:');if(!t)return;const r=find(id);r.n.c=r.n.c||[];if(!r.n.c.length&&r.n.m){/* leaf becomes section */}const nn={id:'n'+Date.now(),t,m:[]};r.n.c.push(nn);S.selEdit=nn.id;save();render();toast('Тақырып қосылды')}
+function addRoot(){const t=prompt('Жаңа бөлім атауы:');if(!t)return;const nn={id:'n'+Date.now(),t,c:[]};S.tree.push(nn);S.selEdit=nn.id;save();render()}
+function renameNode(id){const r=find(id);const t=prompt('Жаңа атауы:',r.n.t);if(!t)return;r.n.t=t;save();render()}
+function moveNode(id,dir){const r=find(id),j=r.i+dir;if(j<0||j>=r.arr.length)return;[r.arr[r.i],r.arr[j]]=[r.arr[j],r.arr[r.i]];save();render()}
+function delNode(id){const r=find(id);if(!confirm(`«${r.n.t}» және оның ішіндегінің бәрі жойылсын ба?`))return;r.arr.splice(r.i,1);S.selEdit=null;save();render();toast('Жойылды')}
+function toggleHidden(id){const r=find(id);r.n.hidden=!r.n.hidden;save();render();toast(r.n.hidden?'Оқушылардан жасырылды':'Оқушыларға көрінеді')}
+function saveNodeMeta(id){const r=find(id);r.n.t=$('#ed_t').value||r.n.t;r.n.g=$('#ed_g').value;r.n.desc=$('#ed_d').value;save();render();toast('✅ Сақталды')}
+function addFiles(id,files){const r=find(id);r.n.m=r.n.m||[];for(const f of files){const e=f.name.split('.').pop().toLowerCase();r.n.m.push({type:['mp4','mov','webm'].includes(e)?'video':e==='pdf'?'pdf':'file',name:f.name})}save();render();toast(`📎 ${files.length} файл жүктелді`)}
+function addLink(id){const u=$('#ed_l').value.trim();if(!u)return;const r=find(id);r.n.m=r.n.m||[];r.n.m.push({type:/youtu/.test(u)?'video':'link',name:u});save();render()}
+function delMat(id,k){const r=find(id);r.n.m.splice(k,1);save();render()}
+function addMat(id,type){const r=find(id);r.n.m=r.n.m||[];const nm={tasks:'Есептер жинағы',test:'Жаңа тест'}[type];if(type==='test'){testBuilder(id);return}r.n.m.push({type,name:nm});save();render()}
+function testBuilder(id){openModal(`<h3>Тест құрастыру</h3><p class="muted small">${esc(tname(id))}</p><label>Сұрақ</label><textarea id="tb_q" rows="2" placeholder="Сұрақ мәтіні, формула да болады: F = ma"></textarea>
+ ${[0,1,2,3].map(k=>`<div class="row mt8"><input type="radio" name="tb_a" value="${k}" ${k===0?'checked':''} style="width:auto"><input placeholder="${'ABCD'[k]} нұсқасы"></div>`).join('')}
+ <label>Түсіндірме (оқушы жауап бергеннен кейін көрінеді)</label><input placeholder="Мысалы: a = F/m">
+ <div class="row mt16"><button class="btn btn-g" onclick="toast('Сұрақ қосылды · келесісін жазыңыз')">+ Тағы сұрақ</button><button class="btn btn-p" style="flex:1" onclick="(function(){const r=find('${id}');r.n.m=r.n.m||[];r.n.m.push({type:'test',name:'Тест: '+r.n.t});save();closeModal();render();toast('Тест жарияланды')})()">Тестті жариялау</button></div>
+ <p class="tiny muted mt12">Excel/Word-тан сұрақтарды импорттау — келесі кезеңде</p>`)}
+function tTree(){
+ const r=S.selEdit&&find(S.selEdit),n=r&&r.n,kids=n&&n.c&&n.c.length;
+ let det=`<div class="card muted">Тақырыпты таңдаңыз — материалдар осы жерде</div>`;
+ if(n)det=`<div class="card"><div class="row between wrapf"><span class="tag">${kids?'Бөлім':'Тақырып'}</span><div class="row small"><span>Оқушыларға көрінеді</span><button class="toggle ${n.hidden?'':'on'}" onclick="toggleHidden('${n.id}')"></button></div></div>
+  <label>Атауы</label><input id="ed_t" value="${esc(n.t)}">
+  <div class="g2" style="gap:10px"><div><label>Сыныптар</label><input id="ed_g" value="${esc(n.g||'')}" placeholder="мысалы: 9, 11"></div><div><label>Ашылу күні</label><input type="date" value="2026-10-14"></div></div>
+  <label>Сипаттама (оқушыға көрінеді)</label><textarea id="ed_d" rows="2" placeholder="Тақырыптың қысқаша мазмұны, қандай формулалар">${esc(n.desc||'')}</textarea>
+  <button class="btn btn-p btn-s mt12" onclick="saveNodeMeta('${n.id}')">${ic('check')} Сақтау</button></div>
+  ${kids?`<div class="card mt16"><b>Ішкі тақырыптар</b><p class="small muted mt8">${n.c.map(k=>esc(k.t)).join(' · ')}</p><button class="btn btn-g btn-s mt12" onclick="addChild('${n.id}')">${ic('plus')} Ішкі тақырып қосу</button></div>`:`
+  <div class="card mt16"><div class="row between"><b>Материалдар · ${(n.m||[]).length}</b><span class="tiny muted">оқушылар осы ретпен көреді</span></div>
+   <div class="mt12">${(n.m||[]).map((m,k)=>{const t=MI[m.type]||MI.file;return `<div class="list-it"><div class="ti" style="background:${t[2]};color:${t[1]}">${ic(t[0])}</div><div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b class="small">${esc(m.name)}</b></div><button class="btn-i" onclick="delMat('${n.id}',${k})">${ic('trash','width:15px;height:15px')}</button></div>`}).join('')||'<p class="muted small">Әзірге материал жоқ</p>'}</div>
+   <div class="drop mt16" onclick="this.querySelector('input').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="event.preventDefault();addFiles('${n.id}',event.dataTransfer.files)">${ic('upload','width:28px;height:28px')}<div class="mt8"><b>Файлды осында сүйреңіз немесе басыңыз</b></div><div class="tiny">Бейне, PDF, презентация, сурет</div><input type="file" multiple hidden onchange="addFiles('${n.id}',this.files)"></div>
+   <div class="row mt12"><input id="ed_l" placeholder="YouTube немесе кез келген сілтеме"><button class="btn btn-g" onclick="addLink('${n.id}')">${ic('link')}</button></div>
+   <div class="row wrapf mt12"><button class="btn btn-g btn-s" onclick="testBuilder('${n.id}')">${ic('bolt')} Тест құру</button><button class="btn btn-g btn-s" onclick="addMat('${n.id}','tasks')">${ic('list')} Есептер жинағы</button><button class="btn btn-g btn-s" onclick="hwModal('${n.id}')">${ic('hw')} Үй жұмысын беру</button></div></div>
+  <div class="card mt16"><b>Тақырып статистикасы</b><div class="g3 mt12" style="gap:10px"><div class="kpi"><div class="lbl">Орташа меңгеру</div><div class="num">${avgOf({n:'avg',lvl:.66},[n.id])??'—'}%</div></div><div class="kpi"><div class="lbl">Аяқтағандар</div><div class="num">${Math.round(8+h(n.id)*14)}/24</div></div><div class="kpi"><div class="lbl">Сұрақтар</div><div class="num">${Math.round(h(n.id+'q')*5)}</div></div></div></div>`}`;
+ return head('Тақырыптар ағашы','Құрылымды өзіңіз басқарасыз: бөлім → тақырып → материал. Өзгерістер оқушыларда бірден көрінеді.',`<button class="btn btn-g btn-s" onclick="if(confirm('Ағашты бастапқы күйге қайтару керек пе?')){S.tree=clone(TREE0);initMats(S.tree);save();render()}">Бастапқы күй</button><button class="btn btn-p btn-s" onclick="addRoot()">${ic('plus')} Бөлім қосу</button>`)+
+ `<div class="split wide"><div class="card sticky" style="padding:10px;max-height:calc(100vh - 140px);overflow:auto">${S.tree.map(x=>editNode(x,0)).join('')}</div><div>${det}</div></div>`}
+function hwModal(tid){const L=leaves();openModal(`<h3>Үй жұмысын беру</h3><label>Атауы</label><input id="h_t" placeholder="Мысалы: Импульс: 8 есеп">
+ <label>Тақырып</label><select id="h_tp">${L.map(l=>`<option value="${l.id}" ${l.id===tid?'selected':''}>${esc(l.t)} — ${esc(l.root)}</option>`).join('')}</select>
+ <div class="g2" style="gap:10px"><div><label>Топ</label><select id="h_g"><option>11 · ҰБТ тобы</option><option>9–10 топ</option><option>7–8 топ</option><option>Барлығы</option></select></div><div><label>Мерзімі</label><input id="h_d" type="date" value="2026-10-17"></div></div>
+ <div class="g2" style="gap:10px"><div><label>XP сыйақы</label><input id="h_x" type="number" value="${S.game.hw}"></div><div><label>Файл тіркеу</label><input type="file"></div></div>
+ <label>Нұсқаулық</label><textarea rows="3" placeholder="Есептер жинағынан 3, 5, 7–12 есептер"></textarea>
+ <button class="btn btn-p mt16" style="width:100%" onclick="createHw()">Жариялау</button>`)}
+function createHw(){const t=$('#h_t').value.trim();if(!t){toast('Атауын жазыңыз');return}S.hw.unshift({id:Date.now(),t,topic:$('#h_tp').value,due:$('#h_d').value||'2026-10-17',st:'new',xp:+$('#h_x').value||60,grp:$('#h_g').value});save();closeModal();render();toast('✅ Үй жұмысы жарияланды — оқушылар кабинетінде көрінеді')}
+function tHw(){return head('Үй жұмыстары','Беру, тексеру, бағалау',`<button class="btn btn-p btn-s" onclick="hwModal()">${ic('plus')} Жаңа үй жұмысы</button>`)+
+ `<div class="g3"><div class="card kpi"><div class="lbl">Белсенді</div><div class="num">${S.hw.filter(w=>w.st!=='checked').length}</div></div><div class="card kpi"><div class="lbl">Тексеруді күтуде</div><div class="num" style="color:#d97706">${S.hw.filter(w=>w.st==='submitted').length*7+5}</div></div><div class="card kpi"><div class="lbl">Мерзімінде тапсыру</div><div class="num" style="color:#047857">87%</div></div></div>
+ <div class="card mt16 tscroll" style="padding:6px 8px"><table class="t"><thead><tr><th>Тапсырма</th><th>Тақырып</th><th>Топ</th><th>Мерзімі</th><th>Тапсырды</th><th></th></tr></thead><tbody>${S.hw.map(w=>{const n=Math.round(10+h('hw'+w.id)*12);return `<tr><td><b class="small">${esc(w.t)}</b></td><td class="small">${esc(tname(w.topic))}</td><td class="small">${esc(w.grp||'')}</td><td class="small">${fmtD(w.due)}</td><td><div class="row small"><div class="bar" style="width:70px"><i style="width:${n/24*100}%"></i></div>${n}/24</div></td><td style="text-align:right"><button class="btn btn-g btn-s" onclick="checkModal(${w.id})">Тексеру</button></td></tr>`}).join('')}</tbody></table></div>`}
+function checkModal(id){const w=S.hw.find(x=>x.id===id);const subs=STU.slice(0,5);openModal(`<h3>Тексеру</h3><p class="muted small">${esc(w.t)}</p><div class="mt16">${subs.map((s,i)=>`<div class="list-it">${av(s.n,32)}<div style="flex:1"><b class="small">${esc(s.n)}</b><div class="tiny muted">${i%2?'2 фото':'PDF'} · ${['бүгін 08:40','кеше 21:15','кеше 19:02','08.10','08.10'][i]}</div></div><button class="btn-i" onclick="toast('Файл ашылды (демо)')">${ic('eye')}</button><input type="number" placeholder="балл" style="width:72px;padding:7px" value="${i<2?'':Math.round(60+h(s.n+id)*40)}"></div>`).join('')}</div>
+ <label>Барлығына ортақ пікір</label><textarea rows="2" placeholder="Жалпы қателер..."></textarea><button class="btn btn-p mt16" style="width:100%" onclick="(function(){const w=S.hw.find(x=>x.id===${id});if(w.st==='submitted'){w.st='checked';w.score=88;w.cm='Жақсы жұмыс! Есептеулер дұрыс.'}save();closeModal();render();toast('Бағалар сақталды · оқушылар мен ата-аналарға хабарлама кетті')})()">Бағаларды сақтау</button>`)}
+function tStudents(){const g=S.rGroup;const L=STU.filter(s=>g==='all'||s.grp===g);return head('Оқушылар',`${STU.length} оқушы · 3 топ`,`<button class="btn btn-g btn-s" onclick="toast('Шақыру сілтемесі көшірілді')">${ic('link')} Шақыру сілтемесі</button><button class="btn btn-p btn-s" onclick="toast('Оқушы қосу формасы (демо)')">${ic('plus')} Оқушы қосу</button>`)+
+ `<div class="chips">${['all','11 · ҰБТ тобы','9–10 топ','7–8 топ'].map(x=>`<button class="chip ${g===x?'on':''}" onclick="S.rGroup='${x}';render()">${x==='all'?'Барлығы':x} · ${x==='all'?STU.length:STU.filter(s=>s.grp===x).length}</button>`).join('')}</div>
+ <div class="card mt16 tscroll" style="padding:6px 8px"><table class="t"><thead><tr><th>Оқушы</th><th>Сынып</th><th>Деңгей</th><th>Орташа</th><th>Соңғы белсенділік</th><th></th></tr></thead><tbody>${L.map(s=>{const a=avgOf(s,leaves().map(l=>l.id));const d=Math.floor(h(s.n+'d')*6);return `<tr><td><div class="row">${av(s.n,30)}<b class="small">${esc(s.n)}</b></div></td><td class="small">${s.gr}</td><td><span class="tag gray">${lvlOf(xpOf(s)).name}</span></td><td><div class="row small"><div class="bar ${clr(a)}" style="width:70px"><i style="width:${a}%"></i></div>${a}%</div></td><td class="small ${d>3?'':'muted'}" style="${d>3?'color:#b91c1c;font-weight:600':''}">${d===0?'бүгін':d+' күн бұрын'}</td><td style="text-align:right;white-space:nowrap"><button class="btn btn-g btn-s" onclick="toast('AI-есеп ${esc(s.n)} ата-анасына жіберілді (демо)')">${ic('spark')} Ата-анаға есеп</button></td></tr>`}).join('')}</tbody></table></div>`}
+function tApps(){const st={new:['Жаңа','warn'],called:['Қоңырау шалынды',''],added:['Топқа қосылды','ok']};return head('Өтінімдер','Сайттағы «Тегін сабақ» формасынан келеді',`<button class="btn btn-g btn-s" onclick="go('landing');setTimeout(trialModal,50)">Форманы тексеру</button>`)+
+ (S.apps.length?S.apps.map((a,i)=>`<div class="list-it" style="padding:16px;flex-wrap:wrap">${av(a.n)}<div style="flex:1;min-width:200px"><div class="row wrapf"><b>${esc(a.n)}</b><span class="tag ${st[a.st][1]}">${st[a.st][0]}</span></div><div class="small muted">${esc(a.gr)}-сынып · ${esc(a.goal)} · ${esc(a.plan)} · ${esc(a.ph)} · ${esc(a.d)}</div></div><div class="row"><button class="btn btn-g btn-s" onclick="S.apps[${i}].st='called';save();render();toast('Қоңырау белгіленді')">${ic('phone')} Қоңырау шалдым</button><button class="btn btn-p btn-s" onclick="S.apps[${i}].st='added';save();render();toast('Оқушыға кабинетке кіру SMS-і жіберілді (демо)')">Топқа қосу</button></div></div>`).join(''):'<div class="card muted">Өтінім жоқ</div>')}
+function tGame(){const G=S.game;const f=(k,l)=>`<div class="list-it"><div style="flex:1"><b class="small">${l}</b></div><input type="number" value="${G[k]}" style="width:90px" onchange="S.game.${k}=+this.value"> <span class="small muted">XP</span></div>`;
+ return head('Геймификация','Ұпай ережелері, деңгейлер, белгілер',`<button class="btn btn-p btn-s" onclick="save();toast('✅ Ережелер сақталды')">${ic('check')} Сақтау</button>`)+`<div class="g2">
+ <div class="card"><b>Неге XP беріледі</b><div class="mt12">${f('lesson','Сабаққа қатысу')}${f('hw','Үй жұмысы (мерзімінде)')}${f('test','Тақырып тесті (10 сұрақ)')}${f('streak','Күнделікті серия (әр күн)')}</div></div>
+ <div><div class="card"><b>Режимдер</b><div class="list-it mt12"><div style="flex:1"><b class="small">Апталық лига</b><div class="tiny muted">Әр дүйсенбі нөлденеді, топ-3 белгі алады</div></div><button class="toggle ${G.league?'on':''}" onclick="S.game.league=!S.game.league;render()"></button></div><div class="list-it"><div style="flex:1"><b class="small">Белгілер (жетістіктер)</b><div class="tiny muted">${BADGES.length} белгі белсенді</div></div><button class="toggle ${G.badges?'on':''}" onclick="S.game.badges=!S.game.badges;render()"></button></div></div>
+ <div class="card mt16"><div class="row between"><b>Деңгейлер</b><button class="btn btn-g btn-s" onclick="toast('Деңгей қосу (демо)')">${ic('plus')}</button></div><div class="mt12">${LEVELS.map((l,i)=>`<div class="row small" style="padding:6px 0"><span style="font-size:20px">${['🌱','🔭','🧪','🍎','🌌'][i]}</span><b style="flex:1">${l[1]}</b><span class="muted">${l[0]} XP-тен</span></div>`).join('')}</div></div></div></div>
+ <div class="card mt16"><div class="row between"><b>Белгілер</b><button class="btn btn-g btn-s" onclick="toast('Жаңа белгі құру (демо)')">${ic('plus')} Белгі қосу</button></div><div class="chips mt12">${BADGES.map(b=>`<span class="chip">${b[0]} ${b[1]}</span>`).join('')}</div></div>`}
+function tSched(){const days=['Дс','Сс','Ср','Бс','Жм','Сб'],hrs=['15:00','16:30','18:00','19:30'];const L={'1-2':'11 · ҰБТ тобы','3-2':'11 · ҰБТ тобы','0-1':'9–10 топ','2-1':'9–10 топ','4-0':'7–8 топ','5-0':'Жеке: Арман','5-1':'ҰБТ сынақ','1-3':'Жеке: Інжу'};
+ return head('Кесте','14–19 қазан',`<button class="btn btn-g btn-s" onclick="toast('Google Calendar-мен синхрондау (демо)')">${ic('cal')} Синхрондау</button><button class="btn btn-p btn-s" onclick="toast('Сабақ қосу (демо)')">${ic('plus')} Сабақ</button>`)+
+ `<div class="card tscroll"><div class="sched"><div></div>${days.map(d=>`<div class="h">${d}</div>`).join('')}${hrs.map((hh,r)=>`<div class="h" style="text-align:right;padding-right:6px">${hh}</div>${days.map((d,c)=>{const x=L[c+'-'+r];return `<div class="c ${x?'ls':''}" ${x?`onclick="toast('${x} · ${d} ${hh} · Zoom сілтемесі көшірілді')" style="cursor:pointer"`:''}>${x?`<b class="tiny">${x}</b>`:''}</div>`}).join('')}`).join('')}</div></div>`}
+
+/* ================= feedback mode ================= */
+const FB_EMAIL='anuarkabidenov1302@gmail.com'; // куда приходят комментарии
+const IS_DESK=matchMedia('(min-width:861px) and (pointer:fine)').matches;
+const VIEWN={landing:'Басты сайт',student:'Оқушы кабинеті',parent:'Ата-ана кабинеті',teacher:'Мұғалім кабинеті'};
+const PICK='.btn,.chip,.opt,.tree .nrow,.en-row,.side .it,.side .who,.lb-row,.list-it,.stat,.pod,.fchip,.atom,.hero h1,.hero .lead,.pill,nav.top,.mhead,table.t,.drop,.chat,.cta,.parentband,.card,h2.sec,footer,section.blk';
+let FB=store('fb')||[],fbOn=false,fbOpen=false;
+function scrName(){if(S.view==='landing')return VIEWN.landing;const t=(TABS[S.view]||[]).find(x=>x[0]===S.tab);return VIEWN[S.view]+' → '+(t?t[1]:S.tab)}
+function idxPath(el){const p=[];while(el&&el.id!=='app'&&el.parentElement){p.unshift([...el.parentElement.children].indexOf(el));el=el.parentElement}return el&&el.id==='app'?p:null}
+function byPath(p){let el=$('#app');for(const i of p){el=el&&el.children[i]}return el}
+function fbSave(){store('fb',FB);fbBtn();drawPins();if(fbOpen)fbPanel()}
+function fbBtn(){$('#fbbtn').className='fb-btn fb-ui'+(fbOn?' on':'');$('#fbbtn').innerHTML=fbOn?`${ic('check')} Пікір режимінен шығу`:`💬 Пікір қалдыру${FB.length?` <span class="n">${FB.length}</span>`:''}`}
+function fbToggle(){fbOn=!fbOn;document.body.classList.toggle('fbm',fbOn);$('#fbbar').style.display=fbOn?'block':'none';document.querySelectorAll('.fb-hl').forEach(x=>x.classList.remove('fb-hl'));if(fbOn){fbOpen=true;fbPanel()}fbBtn()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fbOn)fbToggle()});
+document.addEventListener('mouseover',e=>{if(!fbOn)return;document.querySelectorAll('.fb-hl').forEach(x=>x.classList.remove('fb-hl'));const el=e.target.closest(PICK);if(el&&el.closest('#app'))el.classList.add('fb-hl')},true);
+document.addEventListener('click',e=>{if(!fbOn||e.target.closest('.fb-ui')||e.target.closest('#modal'))return;const el=e.target.closest(PICK);if(!el||!el.closest('#app'))return;e.preventDefault();e.stopPropagation();fbNew(el)},true);
+function fbNew(el){const label=el.innerText.replace(/\s+/g,' ').trim().slice(0,80)||el.className;
+ window._fbEl=el;openModal(`<h3>Пікір</h3><p class="muted small">${esc(scrName())}</p><div class="msg ai mt12" style="max-width:100%;font-size:13px">«${esc(label)}»</div>
+ <label>Не өзгерту керек?</label><textarea id="fb_t" rows="4" placeholder="Мысалы: бұл жерде менің фотом болсын / бағасы басқа / бұл батырма керек емес"></textarea>
+ <button class="btn btn-a mt16" style="width:100%" onclick="fbAdd()">Сақтау</button>`);setTimeout(()=>$('#fb_t').focus(),50)}
+function fbAdd(){const t=$('#fb_t').value.trim();if(!t){toast('Пікір мәтінін жазыңыз');return}const el=window._fbEl;
+ FB.push({id:Date.now(),scr:scrName(),view:S.view,tab:S.tab,path:el?idxPath(el):null,label:el?el.innerText.replace(/\s+/g,' ').trim().slice(0,80):'Жалпы пікір',text:t});closeModal();fbSave();toast('Пікір сақталды · барлығы '+FB.length)}
+function fbGeneral(){const t=$('#fb_g').value.trim();if(!t)return;FB.push({id:Date.now(),scr:'Жалпы',view:null,tab:null,path:null,label:'Жалпы пікір',text:t});fbSave()}
+function fbDel(id){FB=FB.filter(c=>c.id!==id);fbSave()}
+function fbGo(id){const c=FB.find(x=>x.id===id);if(c&&c.view){S.view=c.view;S.tab=c.tab;render();const el=c.path&&byPath(c.path);if(el)el.scrollIntoView({block:'center',behavior:'smooth'})}}
+function fbPanel(){const p=$('#fbpanel');if(!fbOpen){p.innerHTML='';return}
+ p.innerHTML=`<div class="fb-panel"><div class="row between"><b>Пікірлер · ${FB.length}</b><button class="btn-i" onclick="fbOpen=false;fbPanel()">${ic('x')}</button></div>
+ <p class="tiny muted mt8">Пікір режимін қосып, кез келген блокты басыңыз. Телефон мен компьютерде қарап шығыңыз, пікірді осы жерден жібересіз.</p>
+ <div class="mt8">${FB.map((c,i)=>`<div class="fb-item"><div class="row between"><b>${i+1}. ${esc(c.scr)}</b><span class="row" style="gap:2px">${c.view?`<button class="btn-i" title="Көрсету" onclick="fbGo(${c.id})">${ic('eye','width:15px;height:15px')}</button>`:''}<button class="btn-i" title="Жою" onclick="fbDel(${c.id})">${ic('trash','width:15px;height:15px')}</button></span></div><div class="tiny muted">«${esc(c.label)}»</div><div class="mt8" style="margin-top:4px">${esc(c.text)}</div></div>`).join('')||'<p class="small muted" style="padding:10px 0">Әзірге пікір жоқ</p>'}</div>
+ <label>Жалпы пікір (бүкіл сайт туралы)</label><div class="row"><input id="fb_g" placeholder="Түсі, стилі, атауы…" onkeydown="if(event.key==='Enter')fbGeneral()"><button class="btn btn-g" onclick="fbGeneral()">${ic('plus')}</button></div>
+ <div style="display:grid;gap:8px;margin-top:14px"><button class="btn btn-a" onclick="fbSend()">${ic('send')} Поштамен жіберу</button><div class="g2" style="gap:8px"><button class="btn btn-g btn-s" onclick="fbCopy()">Көшіру</button><button class="btn btn-g btn-s" onclick="fbFile()">Файлға сақтау</button></div></div></div>`}
+function fbText(){return 'Alpa Physics — макет бойынша пікірлер\nКүні: '+new Date().toLocaleString('ru')+'\nБарлығы: '+FB.length+'\n\n'+FB.map((c,i)=>`${i+1}. [${c.scr}] «${c.label}»\n   → ${c.text}`).join('\n\n')}
+function fbCopy(silent){const t=fbText();try{navigator.clipboard.writeText(t);if(!silent)toast('Мәтін көшірілді — хатқа немесе WhatsApp-қа қойыңыз')}catch(e){if(!silent)fbFile()}}
+function fbFile(){const b=new Blob([fbText()],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='alpa_pikirler.txt';a.click();toast('Файл сақталды — оны хатқа тіркеңіз')}
+function fbSend(){if(!FB.length){toast('Әзірге пікір жоқ');return}fbCopy(true);location.href=`mailto:${FB_EMAIL}?subject=${encodeURIComponent('Alpa Physics — макет бойынша пікірлер')}&body=${encodeURIComponent(fbText())}`;toast('Пошта ашылды. Хат бос болса — Ctrl+V басыңыз (мәтін көшірілді)')}
+function drawPins(){const L=$('#fbpins');if(!L)return;if(!IS_DESK){L.innerHTML='';return}let out='';FB.forEach((c,i)=>{if(!c.path||c.view!==S.view||c.tab!==S.tab)return;const el=byPath(c.path);if(!el)return;const r=el.getBoundingClientRect();if(!r.width)return;out+=`<div class="fb-pin" title="${esc(c.text)}" style="left:${r.right+scrollX-14}px;top:${r.top+scrollY-10}px" onclick="fbOpen=true;fbPanel()">${i+1}</div>`});L.innerHTML=out}
+let _pinRaf;addEventListener('scroll',()=>{cancelAnimationFrame(_pinRaf);_pinRaf=requestAnimationFrame(drawPins)},{passive:true});addEventListener('resize',drawPins);
+const _render=render;render=function(){_render();drawPins()};
+function intro(){if(store('intro'))return;store('intro',1);openModal(`<div style="font-size:40px">👋</div><h3 class="mt8">Сәлем, Алпа!</h3>
+ <p class="mt12">Бұл — сіздің болашақ сайтыңыздың <b>алғашқы макеті</b>. Барлық батырма басылады: басты бет, оқушы, ата-ана және <b>сіздің мұғалім кабинетіңіз</b> («Рөлді ауыстыру» арқылы).</p>
+ <p class="mt12">Цифрлар, бағалар, пікірлер мен оқушылар — уақытша мысал, оларды сізбен бірге ауыстырамыз.</p>
+ ${IS_DESK?`<p class="mt12"><b>Пікір қалдыру:</b> оң жақ төмендегі сары <b>«💬 Пікір қалдыру»</b> батырмасын басып, өзгерткіңіз келетін кез келген блокты басыңыз. Соңында <b>«Поштамен жіберу»</b>.</p>`:`<p class="mt12">Телефоннан көрінісін қарап шығыңыз. <b>Пікірлерді компьютерден</b> қалдырасыз — онда арнайы батырма бар.</p>`}
+ <button class="btn btn-p mt16" style="width:100%" onclick="closeModal()">Түсінікті, қарайын</button>`)}
+render();fbBtn();intro();
+</script>
+</body>
+</html>
